@@ -29,7 +29,7 @@ module.exports = {
   themeConfig: {
     repo: 'ernestchu/ernestchu.github.io',
     editLinks: true,
-    docsDir: 'docs',
+    docsDir: 'docs/src',
     editLinkText: 'Edit this page on GitHub',
     lastUpdated: true,
     smoothScroll: true,
@@ -55,10 +55,6 @@ module.exports = {
             link: '/courses/cse491-network-application-programming/introduction'
           }
         ]
-      },
-      {
-        text: 'GitHub',
-        link: 'https://github.com/ernestchu'
       }
     ],
     sidebar: {
