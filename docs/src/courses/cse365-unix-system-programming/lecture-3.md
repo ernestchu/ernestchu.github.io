@@ -121,6 +121,20 @@ What is a shell? A shell is a command interpreter that reacts to what you type a
 | **bash**      | Bourne-Again Shell | The most common shell on Linux                    |
 | **zsh**       | Z Shell            | The one I use, simply because it comes with macOS |
 
+::: danger Inconsistency in Bash
+Different shells have different behaviors. However, watch out fot the seemingly convenience but actually dangerous features. Take bash for example
+```sh{3-4,6-7}
+% ls a*b
+no matches found: a*b
+% echo a*b
+a*b
+% touch ab a12345b
+% echo a*b
+ab a12345b
+```
+However, csh and zsh would always treat `a*b` as a wildcard pattern.
+:::
+
 ### Shell scripts
 A shell scripts is a list of commands. For example
 ```sh
@@ -139,7 +153,7 @@ Sun Apr 11 10:23:01 CST 2021
 Sun Apr 11 10:23:04 CST 2021
 ```
 But you probably want to run the script in a new shell to prevent from messing up the current one. You can use `./myscript.sh` to execute it, but which shell would be forked? You can specify with `#!/bin/zsh` at the very first line of a script. Typically, lines start with `#` would be comment lines, however only at the first line, we can use `#!` to specify the shell in which the script would run.
-```sh
+```sh{7}
 # My default shell is zsh, so let's test if we can specify the shell by bash
 % cat myscript.sh
 #!/bin/bash
@@ -175,7 +189,9 @@ I am defined
 % set X = 1 + 1 && echo $X
 set: Variable name must begin with a letter.
 ```
+::: warning Variables in Shell Are Evaulated by Substitution
 From the above we saw that expression won't work, and if the string contains spaces, it must be wrapped by `""`. More importantly, when accessing a variable, the variable is subsititute with its value **without the `""`**, so we have to add it ourselves to ensure the integrity.
+:::
 
 We can also define variable with a `@` and a space by numbers or expressions
 ```sh
@@ -246,7 +262,7 @@ For our convenience, we can omit `argv`.
 - \$argv[\*] $\equiv$ \$\*
 - \$#argv $\equiv$ \$#
 
-However there's an exception
+::: warning Exception
 ```sh
 % cat myscript.sh
 #!/bin/tcsh
@@ -259,8 +275,9 @@ With argv:
 Without argv: ./myscript.sh
 ```
 We can only access the script's name by `$0` but `$argv[0]`
+:::
 
-##### shift
+::: warning shift
 Since `argv` is an array, we can also shift it by `shift argv` or **without argv** `shift`.
 ```sh
 % cat myscript.sh
@@ -271,7 +288,7 @@ shift; echo $*
 arg2 arg3
 arg3
 ```
-
+:::
 ## Command Coordination: More Detailed
 ### Exit status
 `$?` holds the exit status of last command (execution)

@@ -144,7 +144,7 @@ Perform
 cp *
 ```
 **Problem:** What's the effect?
-:::tip Answer
+::: tip Answer
 Error, because what `*` expands into will be `file1 file2 zfile`, but zfile is not a directory hence can't perform the copy.
 :::
 Assume
@@ -159,7 +159,7 @@ Perform
 cp *
 ```
 **Problem:** What's the effect?
-:::tip Answer
+::: tip Answer
 `file1` and `file2` will be copy into `zdir`, like below
 ```sh
 .
