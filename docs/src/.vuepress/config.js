@@ -32,7 +32,6 @@ module.exports = {
     docsDir: 'docs/src',
     editLinkText: 'Edit this page on GitHub',
     lastUpdated: true,
-    smoothScroll: true,
     nav: [
       {
         text: 'TSM-Net',
