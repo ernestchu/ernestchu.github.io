@@ -15,8 +15,9 @@
   "license": "MIT",
   "devDependencies": {
     "@vuepress/plugin-medium-zoom": "^1.8.2",
-    "vuepress": "^1.8.2",
-    "vuepress-plugin-mathjax": "^1.2.8"
+    "vuepress": "^1.8.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "markdown-it-katex": "^2.0.3"
+  }
 }

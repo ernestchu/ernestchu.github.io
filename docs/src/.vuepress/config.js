@@ -102,7 +102,8 @@ module.exports = {
             'lecture-1',
             'lecture-2',
             'lecture-3',
-            'lecture-4'
+            'lecture-4',
+            'lecture-5'
           ]
         }
       ],
@@ -120,6 +121,9 @@ module.exports = {
     }
   },
   markdown: {
+    config: md => {
+      md.use(require('markdown-it-latex'))
+    },
     lineNumbers: true
   },
 
@@ -127,12 +131,6 @@ module.exports = {
    * Apply plugins，ref：https://v1.vuepress.vuejs.org/zh/plugin/
    */
   plugins: [
-    '@vuepress/plugin-medium-zoom',
-    [
-      'vuepress-plugin-mathjax',
-      {
-        target: 'svg'
-      }
-    ]
+    '@vuepress/plugin-medium-zoom'
   ]
 }
