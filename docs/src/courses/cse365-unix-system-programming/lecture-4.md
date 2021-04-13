@@ -25,6 +25,7 @@ else if ( <expression> ) then
     <statement>
 else
     <statement>
+endif
 ```
 ::: warning Spaces
 C-shell is super picky about spaces between words and symbles. The spaces in the example above is necessary. If you get an error message while developing, first try fixing it by **adding spaces**
