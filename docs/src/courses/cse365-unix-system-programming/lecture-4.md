@@ -27,7 +27,7 @@ else
     <statement>
 ```
 ::: warning Spaces
-C-shell is super picky about spaces between words and symbles. The spaces in the example above is necessary. If you get an errpr message while developing, first try fixing it by **adding spaces**
+C-shell is super picky about spaces between words and symbles. The spaces in the example above is necessary. If you get an error message while developing, first try fixing it by **adding spaces**
 :::
 
 #### Csh condition test operators
