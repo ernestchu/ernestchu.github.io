@@ -1,8 +1,4 @@
 # Computer Networks and the Internet
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/github-markdown-css/2.2.1/github-markdown.css">
-
 ## What Is the Internet?
 ### A Nuts-and-Bolts Description
 #### Communication links
@@ -322,8 +318,8 @@ For a TDM link, time is divided into frames of fixed duration, and each frame is
 ###### Exercise
 How long it takes to send a file of 640,000 bits from Host A to Host B over a circuit-switched network. Suppose all links in the network use TDM with 24 slots and have a bit rate of 1.546 Mbps. Also suppose it takes 500 msec to establish an end-to-end circuit beform the host can begin to transimit the file.
 
-- Each circuit has a transmission rate of ${{1.536 Mbps}\over 24} = 64 kbps$
-- It takes ${{640,000 bits}\over {64 kbps}} = 10s$ to transmit the file
+- Each circuit has a transmission rate of 1.536 Mbps / 24 = 64 kbps
+- It takes 640,000 bits / 64 kbps = 10s to transmit the file
 - Adding $0.5s$ due to the circuit establishment time, we get $10.5s$
 
 Note that the transmission time is independent of the number of links.
@@ -341,8 +337,8 @@ Suppose users share a 1 Mbps link and they either generate data at a constant ra
 
 **Circuit switching**
 
-- $100 kbps$ must be reserved for each user at all time.
-- Can only support ${{1 Mbps}\over{100 kbps}} = 10$ simultaneous users.
+- 100 kbps must be reserved for each user at all time.
+- Can only support 1 Mbps / 100 kbps = 10 simultaneous users.
 
 **Packet switching**
 
@@ -356,13 +352,13 @@ Let's consider a second example. Suppose there are 10 users and one of them sudd
 **Circuit switching**
 
 - The user can only use his own portion of the transimission capacity while the others idle.
-- The transmission rate is therefore ${{1 Mbps}\over{10}} = 0.1 Mbps$.
-- It takes ${{1 Mb}\over {0.1 Mbps}} = 10s$ to transmit data.
+- The transmission rate is therefore 1 Mbps / 10 = 0.1 Mbps.
+- It takes 1 Mb / 0.1 Mbps = 10s to transmit data.
 
 **Packet switching**
 
 - The user can continuously send its packets at the full link rate of 1 Mbps, since there are no other useers generating packets.
-- It takes ${{1 Mb}\over {1 Mbps}} = 1s$ to transmit data.
+- It takes 1 Mb / 1 Mbps = 1s to transmit data.
 
 Although packet switching and circuit switching are both prevalent in today’s telecommunication networks, the trend has certainly been in the direction of packet switching. Even many of today’s circuit-switched telephone networks are slowly migrating toward packet switching. In particular, telephone networks often use packet switching for the expensive overseas portion of a telephone call.
 
@@ -442,11 +438,15 @@ The difference between transmission and propagation delay is usually difficult t
 > Image credit to Computer Networking: A Top-down Approach, 7th Edition
 
 Suppose there are a ten-car caravan on the highway and there's a toll booth every 100 km. The first car arriving tollbooth has to wait at the entrance until the other nine cars have arrived. Also suppose each tollbooth services a car at a rate of one car per 12 seconds. The time required for the tollbooth to push the entire caravan onto the highway is
-$${10 car}\times {12 sec} = {2 min}$$
+::: tip Equation
+10 car $\times$ 12 sec = 2 min
+:::
 This time is analogous to the **transmission delay** in a router.
 
 Suppose the cars are driven in the speed of 100 km/hour, the time required for a car to travel from the exit of of one tollbooth to the next tollbooth is
-$${{100 km}\over {100 km/hour}} = {1 hour}$$
+::: tip Equation
+100 km / 100 (km/hour) = 1 hour
+:::
 which is analogous to the propagation delay.
 
 In summary, the total nodal delay is given by
@@ -659,4 +659,7 @@ In this chapter we’ve covered a tremendous amount of material! We’ve looked 
 In the second part of this introductory chapter, we examined several topics central to the field of computer networking. We first examined the causes of delay, throughput and packet loss in a packet-switched network. We developed simple quantitative models for transmission, propagation, and queuing delays as well as for throughput; we’ll make extensive use of these delay models in the homework problems  throughout this book. Next we examined protocol layering and service models, key architectural principles in networking that we will also refer back to throughout this book. We also surveyed some of the more prevalent security attacks in the Internet day. We finished our introduction to networking with a brief history of computer networking. The first chapter in itself constitutes a mini-course in computer networking.
 
 So, we have indeed covered a tremendous amount of ground in this first chapter! If you’re a bit overwhelmed, don’t worry. In the following chapters we’ll revisit all of these ideas, covering them in much more detail (that’s a promise, not a threat!). At this point, we hope you leave this chapter with a still-developing intuition for the pieces that make up a network, a still-developing command of the vocabulary of networking (don’t be shy about referring back to this chapter), and an ever-growing desire to learn more about networking. That’s the task ahead of us for the rest of this book.
+
+
+
 

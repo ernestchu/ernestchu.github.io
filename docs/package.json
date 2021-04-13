@@ -7,7 +7,7 @@
     "name": "",
     "email": ""
   },
-  "repository": "/ernestchu.github.io",
+  "repository": "",
   "scripts": {
     "dev": "vuepress dev src",
     "build": "vuepress build src"
@@ -15,9 +15,8 @@
   "license": "MIT",
   "devDependencies": {
     "@vuepress/plugin-medium-zoom": "^1.8.2",
+    "markdown-it-katex": "^2.0.3",
     "vuepress": "^1.8.2"
   },
-  "dependencies": {
-    "markdown-it-katex": "^2.0.3"
-  }
+  "dependencies": {}
 }

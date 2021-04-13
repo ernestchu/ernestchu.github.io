@@ -28,7 +28,7 @@
 - cannot use it to get matches of more complicated patterns that cannot be described by just giving a fixed string
 
 ## grep
-### Regular expression symbols
+### Regular expression (regex) symbols
 | Symbol | Description                                                                                     | Example                       |
 |--------|-------------------------------------------------------------------------------------------------|-------------------------------|
 | `^`    | caret, as the first symbol of a regex, requires the expression to match the front of a line.    | line begins with 'A': `^A`    |
@@ -46,3 +46,30 @@
 If the caret was not placed as the first symbol inside `[]`, for example, `[ab^cd]`, then it just represents a literal '^'.
 :::
 
+#### Regex and state machine
+
+Regex is derived from the finite state machine.
+
+##### Deternimistic finite state automaton (DFA)
+For the same input, there is exacly one transistion (deterministic) to the next state, for example
+
+![a-a-star](./assets/graphs/lecture-5/svg/a-a-star.svg)
+
+In regex, `aa*`, expressing any sting of at least one a.
+
+##### Nondeternimistic finite state automaton (NFA)
+For the same input, there can be one or more transitions (nondeterministic) to the next state, for example
+
+![a-a-star](./assets/graphs/lecture-5/svg/a-star-a.svg)
+
+In regex, `a*a`, expressing any sting of at least one a.
+
+### Exercise
+**Problem:** Draw the NFA for this regex: `a*a*`
+
+::: tip Answer
+
+![a-a-star](./assets/graphs/lecture-5/svg/a-star-a.svg)
+
+And the simplify/deterministic regex for it: `a*`
+:::

@@ -121,12 +121,24 @@ module.exports = {
     }
   },
   markdown: {
-    config: md => {
-      md.use(require('markdown-it-latex'))
+    extendMarkdown: md => {
+      md.set({
+        html: true
+      })
+      md.use(require('markdown-it-katex'))
     },
     lineNumbers: true
   },
-
+  head: [
+    ['link', {
+      rel: 'stylesheet',
+      href: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css'
+    }],
+    ['link', {
+      rel: "stylesheet",
+      href: "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css"
+    }]
+  ],
   /**
    * Apply plugins，ref：https://v1.vuepress.vuejs.org/zh/plugin/
    */
