@@ -215,7 +215,7 @@ My current directory is /Users/ernestchu
 ```
 
 ::: tip Strength
-### `\` > `'` > `"`
+**`\` > `'` > `"`**
 
 - `\` supresses `!` (history expansion) and all other commands, even EOL can be quoted. That's why we can add `\` at the end of lines to have multi-line commands.
 - `'` as *weaker* quotes, cannot supresses `!`

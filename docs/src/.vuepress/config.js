@@ -33,6 +33,7 @@ module.exports = {
     editLinkText: 'Edit this page on GitHub',
     lastUpdated: true,
     smoothScroll: true,
+    sidebarDepth: 2,
     nav: [
       {
         text: 'TSM-Net',
@@ -123,7 +124,7 @@ module.exports = {
   markdown: {
     extendMarkdown: md => {
       md.set({
-        html: true
+        html: true,
       })
       md.use(require('markdown-it-katex'))
     },
