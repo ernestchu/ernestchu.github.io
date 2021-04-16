@@ -235,8 +235,8 @@ The strength is based on what commands do they surpress. But it doesn't mean `\`
 '\"
 % echo '''
 Unmatched '''.
-% echo '"'
-Unmatched '"'.
+% echo """
+Unmatched """.
 ```
 Interestingly, the only quote that can quote itself is `\`. Neither `'` nor `"` can quote themselves. Why? We'll see below
 :::
