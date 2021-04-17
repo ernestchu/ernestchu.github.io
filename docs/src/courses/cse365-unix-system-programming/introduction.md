@@ -20,3 +20,4 @@ This website includes the notes I took throughout the course. The contents are m
 - Lecture 3 [notes](./lecture-3)
 - Lecture 4 [notes](./lecture-4)
 - Lecture 5 [notes](./lecture-5)
+- Lecture 6 [notes](./lecture-6)

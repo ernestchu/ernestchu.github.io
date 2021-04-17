@@ -104,7 +104,8 @@ module.exports = {
             'lecture-2',
             'lecture-3',
             'lecture-4',
-            'lecture-5'
+            'lecture-5',
+            'lecture-6'
           ]
         }
       ],
