@@ -301,3 +301,118 @@ A b C # step 2, iter 1
 A b C # step 2, iter 2
 A b c # step 2, iter 3
 ```
+
+## More `sed` Actions
+### Command separators
+Sed commands can be separated by either
+
+- A semicolon
+- A newline character (if inside a `sed` script)
+- A `\` and a newline character? (Steve said it works in his C-shell, but not in my C-shell)
+
+Commands can be grouped with `{` and `}`
+
+### Actions that direct to standard output
+| Action | Description                                                                                                                                  |
+|--------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| p      | Print the pattern space to STDOUT.                                                                                                           |
+| P      | Print the pattern space to STDOUT, but only 	up to the first newline character.                                                              |
+| =      | Print the line number to STDOUT.                                                                                                             |
+| i      | Following the i, the rest of the line is a string to insert (i.e., print) to the STDOUT.                                                     |
+| a      | Following the a, the rest of the line is a string. to append to STDOUT after the pattern space gets printed (which happens later).           |
+| c      | Following the c, the rest of the line is a string to print to STDOUT. Afterwards, immediately, start a new cycle for the next line of input. |
+
+### Actions that update the pattern space
+
+| Action | Description                                                                                                                                                                      |
+|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| s      | Substitute pattern with string.                                                                                                                                                  |
+| z      | “Zap” the pattern space (equivalent to: `s/.//g`).                                                                                                                               |
+| y      | Do a tr-like list-based substitution.                                                                                                                                            |
+| n      | Replace pattern space with the next input line, after printing the old space (unless `-n`)                                                                                       |
+| N      | Append the next input line into the pattern space (with a newline inserted before it).                                                                                           |
+| d      | Delete the pattern space. Immediately start a new cycle for the next line of input.                                                                                              |
+| D      | If no newline in pattern space, perform a “d”. Otherwise, delete the pattern space up to first newline, and restart with the resultant pattern space, without reading new input. |
+
+### Compare the `y` with `tr`
+
+#### `tr`
+
+- Allows ranges
+    - e.g. `tr -d 0-9` ≡ `tr -d 013456789`
+- Allows paddings in the replacement (latter) string
+    - e.g. `tr 0-9 01` ≡ `tr 0-9 0111111111`
+- Ignores excrescent characters in the replacement string
+    - e.g. `tr 0-9 a-z` ≡ `tr 0-9 a-j`
+- Uses the last match in the replacement string
+    - e.g. `tr banana 123456` ≡ `tr bna 156`
+
+#### `sed y`
+
+- Disallows ranges
+- Requires the replacement string to have same size
+- Use the first match in the replacement string
+    - e.g. `sed y/banana/123456/` ≡ `sed y/ban/123`
+
+#### Examples
+```sh
+% echo "Hi there" | tr a-z A-Z
+HI THERE
+% echo "Hi there" | tr abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+HI THERE
+% echo "Hi there" | sed 'y/a-z/A-Z/'
+Hi there # a-z and A-Z are treated 3-word literal strings
+% echo "Hi there" | sed 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/'
+HI THERE
+```
+```sh{5,13,79,25}
+% echo aeiou | tr aeiou 12345
+12345
+% echo aeiou | sed 'y/aeiou/12345/'
+12345
+# Same
+
+% echo aeiou | tr aeiou 1-5
+12345
+% echo aeiou | sed 'y/aeiou/1-5/'
+sed: -e expression #1, char 12: strings for `y' command are different lengths
+% echo aeiou | sed 'y/aei/1-5/'
+1-5ou
+# While tr allows ranges, sed y treats it as literal string
+
+% echo aeiou | tr aeiou 123
+12333
+% echo aeiou | sed 'y/aeiou/123/'
+sed: -e expression #1, char 12: strings for `y' command are different lengths
+# While tr pads the latter string, sed y disallows different length
+
+% echo aeiou | tr aeiouiie 12345678
+18745
+% echo aeiou | sed 'y/aeiouiie/12345678/'
+12345
+# While tr takes the last match, sed y takes the first match
+```
+#### Exercise
+Problem: Simplify the following `sed` command to the form with `/` as the separator
+```sh
+sed "you understand now what it'll do"
+```
+::: tip Answer
+What comes after the action is the separator, it's `o` in this case. So first, substitute it with `/`
+```sh
+sed "y/u understand n/w what it'll d/"
+```
+Next, remove duplcated matches. Keep the first match only.
+Also, remove matches that contain same characters.
+```sh
+sed "y/undersa/what i'/"
+```
+Done. The simplest form is obtained. Now we can examine it.
+```{2,4}
+% cat F
+% sed "you understand now what it'll do" F
+ihow what ht'th?
+% sed "y/undersa/what i'/" F
+ihow what ht'th?
+```
+:::
