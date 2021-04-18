@@ -48,11 +48,11 @@ man [command name]
 
 ## Navigating in Unix
 
-| Command           | Description                               |
-|-------------------|-------------------------------------------|
-| `ls`              | list files and directories in a directory |
-| `cd [directory]]` | change current directory                  |
-| `pwd`             | print working directory                   |
+| Command          | Description                               |
+|------------------|-------------------------------------------|
+| `ls`             | list files and directories in a directory |
+| `cd [directory]` | change current directory                  |
+| `pwd`            | print working directory                   |
 
 ### Absolute & Relative addressing
 
