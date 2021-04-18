@@ -148,6 +148,25 @@
 | `.`      | `?`            | Same but different symbols |
 | `*`      | `*`            | Different                  |
 
+### Regex symbols
+
+| Symbol | Description                                                                                     | Example                       |
+|--------|-------------------------------------------------------------------------------------------------|-------------------------------|
+| `^`    | caret, as the first symbol of a regex, requires the expression to match the front of a line.    | line begins with 'A': `^A`    |
+| `$`    | dollar sign, as the last symbol of a regex, requires the expression to match the end of a line. | line ends with 'Z': `Z$`      |
+| `\`    | backslash, turns off special meaning for the next character.                                    | match to a literal '$': `\$`  |
+| `[]`   | brackets, matches to any one of the enclosed characters.                                        | match to any vowel: `[aeiou]` |
+| `.`    | period, matches to any 1 character.                                                             | a 1-character line: `^.$`     |
+
+::: tip Special Symbols Inside Brackets
+| Symbol | Description                                                                                         | Example                   |
+|--------|-----------------------------------------------------------------------------------------------------|---------------------------|
+| `-`    | hyphen, inside `[]`, matches to a range.                                                            | a digit: `[0-9]`          |
+| `^`    | caret, as the first symbol inside `[]`, matches any one character except those enclosed in the `[]` | not a letter: `[^a-zA-Z]` |
+::: warning The Position of The Caret
+If the caret was not placed as the first symbol inside `[]`, for example, `[ab^cd]`, then it just represents a literal `^'.
+:::
+
 ### Normal regex only
 
 

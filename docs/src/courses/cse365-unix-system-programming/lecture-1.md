@@ -76,7 +76,7 @@ For example
 ├── tmp
 └── usr
 ```
-If we are current under the directory `alice` and want to change to the directory the star noted, we can use
+If we are currently under the directory `alice` and want to change to the directory the star noted, we can use
 
 | Absolute Path             | Relative Path |
 |---------------------------|---------------|

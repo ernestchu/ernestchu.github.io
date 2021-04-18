@@ -7,36 +7,22 @@
 
 ### Important flags
 
-|Flag|Description|
-|-|-|
-|`-i`|Case **i**nsensitive|
-|`-n`|Display line **n**umbers|
-|`-v`|In**v**ert the matches|
-|`-w`|**W**hole word matches|
-|`-o`|**O**nly display the matches, not the entire line|
-|`-e`|After this goes a reg**e**x|
-|`-A`|Set the # of lines of context to print **a**fter each match|
-|`-B`|Set the # of lines of context to print **b**efore each match|
-|`-C`|Set the # of lines of **c**ontext to print before and after each match|
-|`--color`|Highlight the matching pattern|
+| Flag      | Description                                                            |
+|-----------|------------------------------------------------------------------------|
+| `-i`      | Case **i**nsensitive                                                   |
+| `-n`      | Display line **n**umbers                                               |
+| `-v`      | In**v**ert the matches                                                 |
+| `-w`      | **W**hole word matches                                                 |
+| `-o`      | **O**nly display the matches, not the entire line                      |
+| `-e`      | After this goes a reg**e**x                                            |
+| `-A`      | Set the # of lines of context to print **a**fter each match            |
+| `-B`      | Set the # of lines of context to print **b**efore each match           |
+| `-C`      | Set the # of lines of **c**ontext to print before and after each match |
+| `--color` | Highlight the matching pattern                                         |
 
 ## fgrep
-#### Important `fgrep` flags
 
-| Flag      | Description                                                                 |
-|-----------|-----------------------------------------------------------------------------|
-| `-i`      | Case **i**nsensitive                                                        |
-| `-n`      | Display line **n**umbers                                                    |
-| `-v`      | In**v**ert the matches                                                      |
-| `-w`      | **W**hole word matches                                                      |
-| `-o`      | **O**nly display the matchm not the entire line containing it               |
-| `-e`      | Specify **e**xpression                                                      |
-| `-A`      | Set the number of lines of context to print **a**fter each match            |
-| `-B`      | Set the number of lines of context to print **b**efore each match           |
-| `-C`      | Set the number of lines of **c**ontext to print before and after each match |
-| `--color` | Highlight the matching pattern                                              |
-
-#### Limitation
+### Limitation
 
 - cannot use it to get approximate matches
 - cannot use it to get matches of more complicated patterns that cannot be described by just giving a fixed string
@@ -180,7 +166,7 @@ fx]f\f
 []	]	]]	x]
 # Both of them treat it as plain text
 ```
-#### What if we want to a "]" in the set?
+#### What if we want a "]" in the set?
 ```sh
 % grep '[x]]' x
 fx]f\f
@@ -386,7 +372,7 @@ egular
 ### Backreference
 Backreference let you identify a rematch to the earlier pattern. Noted that it rematched the **text** instead of reusing the **pattern**.
 
-<span style="color: green">\([a-z]\)</span><span style="color: red">\([a-z]\)</span><span style="color: green">\1</span><span style="color: red">\2</span>
+<span style="color: green">\\([a-z]\\)</span><span style="color: red">\\([a-z]\\)</span><span style="color: green">\1</span><span style="color: red">\2</span>
 
 b<span style="color: green">a</span><span style="color: red">n</span><span style="color: green">a</span><span style="color: red">n</span>a
 
