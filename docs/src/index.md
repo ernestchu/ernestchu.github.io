@@ -1,6 +1,9 @@
 ---
 home: true
-heroImage: https://v1.vuepress.vuejs.org/hero.png
-tagline: 
+heroImage: null
+heroText: null
+tagline: null
+actionText: My Unix Notes
+actionLink: /courses/cse365-unix-system-programming/introduction
 footer: Copyright © 2021 Ernie Chu
 ---

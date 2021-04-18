@@ -117,7 +117,8 @@ module.exports = {
           children: [
             'introduction',
             'chapter-1',
-            'chapter-2'
+            'chapter-2',
+            'chapter-3'
           ]
         }
       ]
@@ -130,7 +131,10 @@ module.exports = {
       })
       md.use(require('markdown-it-katex'))
     },
-    lineNumbers: true
+    lineNumbers: true,
+    toc: {
+      includeLevel: [2, 3, 4]
+    }
   },
   head: [
     ['link', {
