@@ -156,18 +156,17 @@ Socket is a **file descriptor** which allows an application to read/write data f
 ::: tip File Descriptor
 In Unix, all of the I/O are treated as files stream, where `stdin`, `stdout` and `stderr` are mapped to `0`, `1` and `2` in the file descriptor table respectively.
 :::
-### TCP connection
+### TCP server
 TCP establishes connection before each host can transmit data.
-#### TCP server
 We require a serial of procedures to build up a TCP server
 
-1. `socket()`: Get the **file descriptor**
-1. `bind()`: Connect the file descriptor with **IP** and **port**
-1. `listen()`: **Wait** for request from clients
-1. `accept()`: **Accept** request
-1. `read()`: Read data from the socket
+1. [socket()](#socket-procedure): Get the **file descriptor**. 
+1. [bind()](#bind-procedure): Connect the file descriptor with **IP** and **port**. 
+1. [listen()](#listen-procedure): **Wait** for request from clients. 
+1. [accept()](#accept-procedure): **Accept** request. 
+1. [read()](#read-procedure): Read data from the socket. 
 
-##### socket procedure
+#### socket procedure
 ```c
 #include <sys/socket.h>
 
@@ -187,21 +186,250 @@ int socket(int family, int type, int protocol);
     - `IPPROTO_UDP`
     - ...
 
-##### bind procedure
+#### bind procedure
 ```c
 int fd;
 struct sockaddr_in srv;
 
-src.sin_family  = AF_INET;
-src.sin_port    = htons(80);
+/* 1) create the socket by socket() */
 
-src.sin_addr.s_addr = htonl(INADDR_ANY);
+srv.sin_family      = AF_INET;              /* IPv4*/
+srv.sin_port        = htons(80);            /* listen on port 80 */
+srv.sin_addr.s_addr = htonl(INADDR_ANY);    /* listen on all of the network interface */
 
 if (bind(fd, (struct sockaddr*) &srv, sizeof(srv)) < 0) {
     perror("bind");
     exit(1);
 }
 ```
+
+#### listen procedure
+When a socket is created by `socket()`, it default to a **active** socket. Then `listen()` procedure converts it to a **passive** socket, so kernel can accept incoming connection directed to this socket.
+```c
+#define BACKLOG = 5     /* This specifies the max #connections that kernel should queue for this socket */
+int fd;
+struct sockaddr_in srv;
+
+/* 1) create the socket by socket() */
+/* 2) bind the socket to a port by bind() */
+
+if (listen(fd, BACKLOG) < 0) {
+    perror("listen");
+    exit(1);
+}
+```
+Here the connection is not established yet! We just store the requests in a queue. The size of the queue depends on `BACKLOG`
+::: danger Backlog of Zero
+If you do not want any client to connect to your socket, just **close** the socket. The backlog is a **pseudo** size. A backlog of zero do not set the number of queued connections to zero.
+:::
+
+#### accept procedure
+`accept()` blocks waiting for a connection, and if there's request, a connection is established. It returns a **new socket** (newfd, dedicated socket for the connection).
+```c
+int fd;                     /* used by socket() */
+struct sockaddr_in srv;     /* used by bind() */
+
+struct sockaddr_in cli;     /* used by accept() */
+int newfd;
+int cli_len = sizeof(cli);
+
+/* 1) create the socket by socket() */
+/* 2) bind the socket to a port by bind() */
+/* 3) listen on the socket */
+
+newfd = accept(fd, (struct sockaddr*) &cli, &cli_len);
+/* The client may be IPv4 or IPv6, pass the references of client variables */
+if (newfd < 0) {
+    perror("accept");
+    exit(1);
+}
+```
+- Get the information of the client
+    - `cli.sin_addr.s_addr` contains client's IP address
+    - `cli.sin_port` contains client's port number
+    - Use [this](#numerical-address-to-string) to extract the content.
+- Then, the server can exchange data with the client by using `read()` and `write()` on the file descriptor `newfd`
+
+#### read procedure
+- `read()` can be used to get data from a socket
+    - `read()` blocks waiting for data from the client
+    - It does **not** guarantee that a `sizeof(buf)` amount of data will be read
+    - It returns #bytes transmitted
+```c
+#define BUFSIZE 512
+inf newfd;             /* dedicated fd */
+char buf[BUFSIZE];
+int nbytes;
+
+/* 1) create the socket by socket() */
+/* 2) bind the socket to a port by bind() */
+/* 3) listen on the socket */
+/* 4) accept the incoming connection */
+
+if ((nbytes = read(newfd, buf, sizeof(buf))) < 0) {
+    perror("read");
+    exit(1);
+}
+```
+
+### TCP client
+#### Deal with IP address
+TCP client needs to know the IP address of the server. However, we use IP addresses as **strings** (with dot, right?) Meanwhile, The computers only recognize them as numbers. So we need a **conversion procedure** again.
+
+##### String to numerical address
+```c
+struct sockaddr_in srv;
+
+srv.sin_addr.s_addr = inet_addr("140.117.11.87");
+
+if (srv.sin_addr.s_addr == (in_addr_t) -1) {
+    fprintf(stderr, "inet_addr failed!\n");
+    exit(1);
+}
+```
+##### Numerical address to string
+```c
+struct sockaddr_in srv;
+
+char *t = inet_ntoa(srv.sin_addr);
+
+if (t == 0) {
+    fprintf(stderr, "inet_ntoa failed!\n");
+    exit(1);
+}
+```
+#### connect procedure
+`connect()` allows a client to connect with the server.
+```c
+int fd;
+struct sockaddr_in srv;
+
+/* 1) create the socket by socket() */
+
+srv.sin_family      = AF_INET;
+srv.sin_port        = htons(80);
+srv.sin_addr.s_addr = inet_addr("140.117.11.87"); /* specify the server IP */
+
+if (connect(fd, (struct sockaddr*) &srv, sizeof(srv)) < 0) {
+    perror("connect");
+    exit(1);
+}
+```
+#### write procedure
+`write()` can be used to write data to a socket
+```c
+#define BUFSIZE 512
+int fd;
+struct sockaddr_in srv;
+char buf[BUFSIZE];
+int nbytes;
+
+/* 1) create the socket by socket() */
+/* 2) connect() to the server */
+
+if ((nbytes = write(fd, buf, sizeof(buf))) < 0) {
+    perror("write");
+    exit(1);
+}
+```
+#### TCP client-server interaction
+
+![figure-1](./assets/images/chapter-3/figure-1.png)
+
+> Image credit to Professor Wang's slides
+
+### UDP server
+UDP uses a single socket for all the transmission
+We require a three procedures to build up a UDP server
+
+1. [socket()](#socket-procedure-2): Get the **file descriptor**. 
+1. [bind()](#bind-procedure-2): Connect the file descriptor with **IP** and **port**. 
+1. [recvfrom()](#recvfrom-procedure): Receive data from the socket
+
+#### socket procedure
+UDP server must create a **datagram** socket
+```c
+int fd;
+
+if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+    /* we didn't specify the protocol, becuase SOCK_DGRAM default it to UDP */
+    perror("socket");
+    eixt(1);
+}
+```
+#### bind procedure
+A socket can be bound to a port
+```c
+int fd;
+struct sockaddr_in srv;
+
+/* 1) create the socket by socket() */
+
+srv.sin_family      = AF_INET;
+srv.sin_port        = htons(123);
+srv.sin_addr.s_addr = htonl(INADDR_ANY);
+
+if (bind(fd, (struct sockaddr*) &srv, sizeof(srv)) < 0) {
+    perror("bind");
+    exit(1);
+}
+```
+#### recvfrom procedure
+`read` does not provide client's addres to UDP server, but in UDP, every transmission need to specify the IP.
+```c
+int fd;
+struct sockaddr_in srv;
+struct sockaddr_in cli;
+char buf[512];
+int cli_len = sizeof(cli);
+int nbytes;
+
+/* 1) create the socket by socket() */
+/* 2) bind to the socket by bind() */
+
+nbyts = recvfrom(fd, buf, sizeof(buf), 0, (struct sockaddr*) &cli, &cli_len);
+
+if (nbytes < 0) {
+    perror("recvfrom");
+    exit(1);
+}
+```
+Actoins performed by recvfrom() procedure
+
+1. Return the #bytes read, i.e., `nbytes`.
+1. Copy a `nbytes` amount of data into `buf`.
+1. Modified the address of the client, i.e., `cli`.
+1. Modified the length of the client, i.e., `cli_len`.
+
+### UDP client
+
+1. socket(): Get the **file descriptor**. 
+1. sendto(): Send data to the socket
+
+#### sendto procedure
+UDP client does not bind a port number. A port number is dynamically assigned when the first `sendto()` procedure is invoked.
+```c
+int fd;
+struct sockaddr_in srv;
+
+srv.sin_family      = AF_INET;
+srv.sin_port        = htons(123);
+srv.sin_addr.s_addr = inet_addr("140.117.11.87");
+
+nbytes = sendto(fd, buf, sizeof(buf), 0, (struct sockaddr*) &srv, sizeof(srv));
+
+if (nbytes < 0) {
+    perror("sendto");
+    exit(1);
+}
+```
+#### UDP client-server interaction
+
+![figure-2](./assets/images/chapter-3/figure-2.png)
+
+> Image credit to Professor Wang's slides
+
+
 
 
 ## Advanced Socket I/O
