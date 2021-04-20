@@ -18,3 +18,6 @@ This website includes the notes I took throughout the course. The contents are m
 | 1       | Network Programming ([notes](./chapter-1))       |
 | 2       | Transport Layer Protocols ([notes](./chapter-2)) |
 | 3       | UNIX Socket Programming ([notes](./chapter-3))   |
+| 4       | Client-server Model ([notes](./chapter-4))       |
+| 5       | Design of Client Software ([notes](./chapter-5)) |
+| 6       | Design of Server Software ([notes](./chapter-6)) |

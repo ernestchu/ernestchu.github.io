@@ -429,8 +429,74 @@ if (nbytes < 0) {
 
 > Image credit to Professor Wang's slides
 
-
-
-
 ## Advanced Socket I/O
-## Some Programming Notes
+### Simultaneous UDP server
+#### A naive solution
+What's wrong with the following code
+```c
+int s1, s2;
+
+/* create socket for s1, s2 and bind to ports */
+
+while (1) {
+    recvfrom(s1, buf1, sizeof(buf), ...);
+    recvfrom(s2, buf2, sizeof(buf2), ...);
+}
+```
+
+::: tip Answer
+If client `s1` never send data, the server would blocking wait for `s1` and would never have chance to receive data from `s2`.
+:::
+
+#### select procedure
+```c
+int select(
+    int maxfds, 
+    fdset *readfds, 
+    fd_set *writefds, 
+    fd_set *exceptfds, 
+    struct timeval *timeout
+);
+
+FD_CLR  (int fd, fd_set *fds);  /* clear the bit for fd in fds */ 
+FD_ISSET(int fd, fd_set *fds);  /* is the bit for fd in fds? */ 
+FD_SET  (int fd, fd_set *fds);  /* turn on the bit for fd in fds */ 
+FD_ZERO (fd_set *fds);          /* clear all bits in fds */ 
+```
+
+- `maxfds`: Number of descriptors to be tested
+    - fd (0, 1, ..., `maxfds-1`) will be tested.
+- `readfds`: Return a set of fds that are ready to read
+- `writefds`: Return a set of fds that are ready to write
+- `exceptfds`: Return a set of fds with exception conditions
+- `timeout`:
+    - If it's NULL, then wait forever and return only when one of the fd is ready for I/O
+    - Otherwise, wait up to `timeout`
+    - Or we can just specify it to 0 in a **while loop**
+
+```c
+int s1, s2;
+fd_set readfds;
+
+while (1) {
+    FD_ZERO(&readfds)       /* initialize the fd set */
+    FD_SET(s1, &readfds);   /* add s1 to the fd set */
+    FD_SET(s2, &readfds);   /* add s2 to the fd set */
+
+    /* use select() for synchronous I/O multiplexing */
+    if (select(s2+1, &readfds, 0, 0, 0) < 0) {
+        /* notice for s2 + 1 */
+        /* set one of the fd in (0, 1, ... s2) */
+        perror("select");
+        exit(1);
+    }
+
+    if (FD_ISSET(s1, &readfds)) {
+        recvfrom(s1, buf, sizeof(buf));
+    }
+    if (FD_ISSET(s2, &readfds)) {
+        recvfrom(s2, buf, sizeof(buf));
+    }
+}
+```
+

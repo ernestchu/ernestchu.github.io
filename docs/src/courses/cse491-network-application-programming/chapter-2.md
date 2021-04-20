@@ -2,16 +2,16 @@
 [[toc]]
 ## Introduction
 ### Jobs of trnaport layer
-#### Addressing
-Determine which application process a packet belongs to (through **ports**).
-#### Error control
-Detect if the received data is valid
-#### Reliability
-Ensure that the transferred data will reach its destination
-#### Rate control
-Adjust how fast the sender should transfer the data to the receiver (avoid packet dropping)
-### UDP vs. TCP
-Both **user datagram protocol (UDP)** and **transmission control protocol (TCP)** are two well-known protocols in the transport layer. But TCP is more **sophisticated** and **complicated** than UDP
+- Addressing
+    - Determine which application process a packet belongs to (through **ports**).
+- Error control
+    - Detect if the received data is valid
+- Reliability
+    - Ensure that the transferred data will reach its destination
+- Rate control
+    - Adjust how fast the sender should transfer the data to the receiver (avoid packet dropping)
+- UDP vs. TCP
+    - Both **user datagram protocol (UDP)** and **transmission control protocol (TCP)** are two well-known protocols in the transport layer. But TCP is more **sophisticated** and **complicated** than UDP
 
 | Protocol | Addressing | Error control | Reliability | Rate control |
 |----------|------------|---------------|-------------|--------------|
@@ -59,13 +59,18 @@ While host-to-host communication in IP or data link layers has low latency and s
 
 ### Functions in transport layer
 
-#### 1. Addressing
+1. Addressing
+1. Error control & reliability
+1. Rate control
+1. Socket programming interface
+
+#### Addressing
 
 There are many process runnning on a host, so transport lyer defines the **port number** (16 bits in the Internet solution) to multiplex and demultiplex. When pacekts arrive on your computer based on the IP address, they need to knowhich process do they go next, i.e., demultiplexing. And vice versa when packets go out from each process.
 
 Port number can be either **well-known** (e.g. SSH uses port 22) or *dynamically assigned*.
 
-#### 2. Error control & reliability
+#### Error control & reliability
 
 Transport layer usually adopts cyclic redundancy check ([CRC](https://en.wikipedia.org/wiki/Cyclic_redundancy_check)) and **checksum** for error detection to guarantee data integrity. Here we give a simple example of the checksum calculation. Suppose that we have the following three 16-bit words.
 ```
@@ -95,12 +100,12 @@ Finally, perform 1's complement then we get the checksum
 ---------------- 1's complement
 1011010100111101
 ```
-#### 3. Rate control
+#### Rate control
 
 - **Window-based** control regulates the sending rate by controlling the number of *outstanding* packets (i.e. a packet that has been sent but its **ACK** has not returned yet) which can be *simultaneously* in transit.
 - **Rate-based** control allows the sender to directly adjust its sending rate when receiving an explicit notification of how fast it should send.
 
-#### 4. Socket programming interface
+#### Socket programming interface
 
 - TCP socket vs. UDP socket
     - We'll discuss in details later
@@ -158,7 +163,7 @@ uniquely identifies a communication flow.
 <table>
     <tr>
         <td>0</td>
-        <td>16 (bit)</td>
+        <td>15</td>
     </tr>
     <tr>
         <td>source port number</td>
@@ -182,7 +187,7 @@ Socket pair is **full-duplex**, meaning that data can be transmitted through the
 
 UDP checksum field stores **1's complement** of the sum over all 16-bit words in both *header* and *payload* (not including itself obviously). We've already cover the 1's complement checksum above.
 
-##### Cross-layer checking
+**Cross-layer checking**
 UDP checksum also covers a 96-bit pseudo header, which consists of four fields in IP header
 
 1. Source IP address, 32 bits
@@ -217,14 +222,14 @@ You may ask, why do we need so many SYNs and ACKs? Why don't we just use 2-way h
 > Image credit to Professor Wang's slides
 
 #### Various connection cases
-##### TCP state transition diagram
+**TCP state transition diagram**
 It's useful to get familiar with these states in order to understand various cases below.
 
 ![figure-6](./assets/images/chapter-2/figure-6.png)
 
 > Image credit to Professor Wang's slides
 
-##### Normal case
+**Normal case**
 
 ![figure-7](./assets/images/chapter-2/figure-7.png)
 
@@ -232,7 +237,7 @@ It's useful to get familiar with these states in order to understand various cas
 
 Note that during establishment (right), the client establishes the connection upon receving the first ACK, whereas the server establishes one upon the second ACK, which is one of the reason of using 3-way handshaking.
 
-##### Special case: simultaneous open or close
+**Special case: simultaneous open or close**
 Sometimes, the server would actively connect with the client also by sending a SYN. However, if the client also send a SYN at the same time, a **simultaneous open** happends. With the design of the state transition, TCP can still successfully establishes connection. The same logic can be applied on the case of termination.
 
 ![figure-8](./assets/images/chapter-2/figure-8.png)
@@ -240,16 +245,15 @@ Sometimes, the server would actively connect with the client also by sending a S
 > Image credit to Professor Wang's slides
 
 #### Loss in establishment
-##### Case 1: SYN sent by the client is lost
+**Case 1: SYN sent by the client is lost**
+
 TCP uses **timeout** to get out.
 
 ![figure-9](./assets/images/chapter-2/figure-9.png)
 
 > Image credit to Professor Wang's slides
 
-
-##### Case 2: SYN sent by the server is lost
-
+**Case 2: SYN sent by the server is lost**
 
 ![figure-10](./assets/images/chapter-2/figure-10.png)
 
@@ -257,21 +261,21 @@ TCP uses **timeout** to get out.
 
 Why does the server send **RST** even if the client is closed, we shall see the answer in the next case.
 
+**Case 3: ACK of SYN sent by the client is lost**
+
 ![figure-11](./assets/images/chapter-2/figure-11.png)
 
 > Image credit to Professor Wang's slides
 
 With the same state transition design, it can handle both case 2 & 3 regardless of whether the client is closed or established.
 
-##### Case 3: ACK of SYN sent by the client is lost
-
 #### TCP state implementation
-##### In `struct sock`
+**In `struct sock`**
 ```c
 volatile unsigned char state, //connection state
 ```
 The `volatile` keyword prevent an optimizing compiler from optimizing away subsequent reads or writes and thus incorrectly reusing a state value or omitting writes. In other words, the CPU has to take the value from the memory every time the variable is used instead from the register. Because the register might not be synchronized with the memory.
-##### State names
+**State names**
 ```c
 static char *statename[] = {
     "Unused"    ,"Established"  ,"Syn Sent"     ,
@@ -289,7 +293,7 @@ static char *statename[] = {
 - Data reliability
     - **Every** transmitted packet is successfully **received** and is exactly the same as the original transmitted one.
 
-#### In TCP
+**In TCP**
 
 - Per-segment integrity
     - Checksum (same as UDP but mandatory)
@@ -338,7 +342,7 @@ Culmulative ACK can solve the following problem
 
 > Image credit to Professor Wang's slides
 
-### Flow control and congestion control
+### Flow control
 
 - Flow control: TCP sender avoid to **overflowing its receiver's buffer** (possibly depends on the receiving host's memory size)
 - Congestion control: TCP sender acoid to overburdening the **shared network** reseource
@@ -363,7 +367,7 @@ Sliding-window mechanism for flow control
 - Sender maintains a sending window to record the starting and ending sequence numbers of data segments being sent.
 - Segements sent but **not ACKed** are kept in a **retransmission buffer**.
 
-##### Pseudo code
+**Pseudo code**
 ```sh
 SWS = send window size
 LAR = last acknowledgement received
@@ -384,7 +388,7 @@ endif
 
 > Image credit to Professor Wang's slides
 
-##### Example
+**Example**
 ::: tip Normal Case
 The green boxes represent segments that just arrived and about to send the ACK. In this cas, the window is slid by on segment at a time.
 ![figure-15](./assets/images/chapter-2/figure-15.png)
@@ -401,9 +405,162 @@ In this case, the window may be slid by multiple segments
 
 :::
 
-#### TCP congetsion control
+### Congetsion control
 TCP sender infers network congestion in a try-and-error fashion. It detects the **loss** events of data segments. If there's loss, it **slows** down its transmission rate to avoid network congestion.
 
+#### TCP Tahoe
+TCP Tahoe uses a **congestion window** (cwnd) to control the amount of transmitted data in one RTT (round-trip time, the time it takes from the sender to the receiver and ACK back to the sender). Maximum value of cwnd is contrained by maximum window **mwnd**.
+
+- cwnd: congestion window
+- ssth: slow start threshold
+
+![figure-18](./assets/images/chapter-2/figure-18.png)
+
+> Image credit to Professor Wang's slides
+
+**Slow start**
+
+Initially, `cwnd=1`. And `cwnd++` upoon receiving **1 ACK**. This results in a **exponential** growth. The below example assume no sequence is lost.
+
+| cwnd (sent) | ACK | Increment (= 1*ACK) |
+|-------------|-----|-------------------|
+| 1           | 1   | 1                 |
+| 2 (1+1)     | 2   | 2                 |
+| 4 (2+2)     | 4   | 4                 |
+| 8           | 8   | 8                 |
+| 16          | 16  | 16                |
+
+Until...
+
+- No loss
+    - When `cwnd` reaches `ssth`, enter the **congestion avoidance** state.
+- Sequence lost
+    - If **triple duplicate ACKs** (because of the lost sequence) are received, enter the **fast retransmit** state
+    - If no ACK is received before **timeout**, enter the **retransmission timeout** state and reset `cwnd=1`
+
+**Congestion avoidance**
+
+`cwnd = cwnd + 1/cwnd` upon receiving **1 ACK**. This results in a **linear** growth.
+
+| cwnd (sent) | ACK | Increment (= (1/cwnd)*ACK) |
+|-------------|-----|----------------------------|
+| 16          | 16  | 1/16*16 = 1                |
+| 17 (16+1)   | 17  | 1/17*17 = 1                |
+| 18          | 18  | 1                          |
+| 19          | 19  | 1                          |
+
+Until sequence lost and same as **slow start** state...
+
+- **triple duplicate ACKs**: enter the **fast retransmit** state
+- **timeout**: enter the **retransmission timeout** state and reset `cwnd=1`
+
+**Fast retransmit**
+Fast retransmit aims at sending the lost packet **immediately** without waiting for the timeout
+
+- Duplicate ACKs may be caused by
+    1. A lost packet
+    1. An out-of-order packet
+- The sender assumes that packet loss occurs upon receiving 3 or more duplicate ACKs
+- After successfully retransmitting the lost packet, set `ssth=cwnd/2` and reset `cwnd=1` then go back to **slow start** state.
+
+**Retransmission timeout**
+If a timeout occurs, the sender sets `ssth=cwnd/2` and return to the slow start state.
+
+**Example**
+
+![figure-19](./assets/images/chapter-2/figure-19.png)
+
+> Image credit to Professor Wang's slides
+
+If you're wandering what is `awnd`, see [here](#awnd)
+#### TCP Reno
+Add a new state: **fast recovery** state
+![figure-20](./assets/images/chapter-2/figure-20.png)
+
+> Image credit to Professor Wang's slides
+
+**Fast recovery**
+When fast retransmit is performed, the sender retransmit the lost packet sets
+
+- `ssth = cwnd/2`
+- `cwnd = ssth+3`
+    - Because 3 duplicate ACKs will trigger 3 `cwnd++` in fast recovery state
+
+Then enter the **fast recovery** state to transmit new packets if allowed. In this state, `cwnd++` upon receiving an ACK.
+
+When ACK of the **lost packet** is received, set `cwnd=ssth` and go back to **congestion avoidance** state.
+
+**Example**
+##### awnd
+
+![figure-21](./assets/images/chapter-2/figure-21.png)
+
+- `snd.una`: the first sequence number of the sent but not ACKed packets
+    - The receiver always ACK with the sequence number of the earilest not-received packet (culmulative), i.e., first of the unACKed (not-received) packets.
+- `snd.nxt`: the sequence number of the next packet to sent
+
+TCP use `cwnd-awnd` to count **outstanding** packets, i.e. number of packets to send in order to fill the window. In other words, send the next packet if `awnd` < `cwnd`, otherwise stop.
+
+![figure-22](./assets/images/chapter-2/figure-22.png)
+
+Notice that since the `cwnd` only reduced to `ssth` instead of 1, and `cwnd++` upon receiving an ACK, the sender can send new packets during recovery state.
+
+**Tahoe vs. Reno**
+
+![figure-23](./assets/images/chapter-2/figure-23.png)
+
+> Image credit to Professor Wang's slides
+
+![figure-24](./assets/images/chapter-2/figure-24.png)
+
+> Image credit to Computer Networking: A Top-down Approach, 7th Edition
+
+
 ### Header format and timer management
+
+<table>
+    <tr>
+        <th colspan="16">0</th>
+        <th colspan="16">15</th>
+    </tr>
+    <tr>
+        <td colspan="16">source port number</td>
+        <td colspan="16">destination port number</td>
+    </tr>
+    <tr>
+        <td colspan="32">32-bit sequence number</td>
+    </tr>
+    <tr>
+        <td colspan="32">32-bit acknowledgement number</td>
+    </tr>
+    <tr>
+        <td colspan="4">header length</td>
+        <td colspan="6">6-bit reserved</td>
+        <td colspan="1">U</td>
+        <td colspan="1">A</td>
+        <td colspan="1">P</td>
+        <td colspan="1">R</td>
+        <td colspan="1">S</td>
+        <td colspan="1">F</td>
+        <td colspan="16">window size</td>
+    </tr>
+    <tr>
+        <td colspan="16">TCP checksum</td>
+        <td colspan="16">urgent pointer</td>
+    </tr>
+    <tr>
+        <td colspan="32">option (if any)</td>
+    </tr>
+    <tr>
+        <td colspan="32">data</td>
+    </tr>
+</table>
+
+- Since the length of options is variable, you need a **header length**
+- TCP receiver should tell the sender about it's buffer length (rwnd, in bytes) via the **window size** slot in the header.
+
+#### Control bits
+
+**URG bit**
 
 
