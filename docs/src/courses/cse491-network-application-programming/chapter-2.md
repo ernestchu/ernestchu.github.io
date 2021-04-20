@@ -238,6 +238,7 @@ It's useful to get familiar with these states in order to understand various cas
 Note that during establishment (right), the client establishes the connection upon receving the first ACK, whereas the server establishes one upon the second ACK, which is one of the reason of using 3-way handshaking.
 
 **Special case: simultaneous open or close**
+
 Sometimes, the server would actively connect with the client also by sending a SYN. However, if the client also send a SYN at the same time, a **simultaneous open** happends. With the design of the state transition, TCP can still successfully establishes connection. The same logic can be applied on the case of termination.
 
 ![figure-8](./assets/images/chapter-2/figure-8.png)
@@ -562,5 +563,28 @@ Notice that since the `cwnd` only reduced to `ssth` instead of 1, and `cwnd++` u
 #### Control bits
 
 **URG bit**
+
+URG bit indicates that the 16-bit urgent pointer is valid.
+
+- Urgent pointer is an offset from the first data byte in **payload**, which indicates the last urgent data type.
+- It facilitates the **in-band signaling** of a TCP connection
+    - E.g. Users use ^C to trigger an urgent signal to cancel an operation
+
+** ACK bit**
+
+ACK bit inidcates that the 32-bit acknowledgemnet number is valid. Acknowledgement number contains the next sequence number that the receiver is expecint to receive.
+
+**PSH bit**
+
+PSH bit asks the receiver to flush out the data in the receiver buffer immediately
+
+**RST bit**
+
+RST bit will reset a connection. Any host receiving an RST-set packet should immediately **close** the connection associated with that packet.
+
+**SYN and FIN bits**
+
+- SYN bit initializes a connection
+- FIN bit initializes that no more data will be sent hence close the connection on both sides.
 
 
