@@ -1,7 +1,7 @@
 # Transport Layer Protocols
 [[toc]]
 ## Introduction
-### Jobs of trnaport layer
+### Jobs of tranport layer
 - Addressing
     - Determine which application process a packet belongs to (through **ports**).
 - Error control
