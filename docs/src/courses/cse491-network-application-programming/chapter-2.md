@@ -562,6 +562,12 @@ Notice that since the `cwnd` only reduced to `ssth` instead of 1, and `cwnd++` u
 
 #### Control bits
 
+- URG bit
+- ACK bit
+- PSH bit
+- RST bit
+- SYN and FIN bits
+
 **URG bit**
 
 URG bit indicates that the 16-bit urgent pointer is valid.
@@ -570,7 +576,7 @@ URG bit indicates that the 16-bit urgent pointer is valid.
 - It facilitates the **in-band signaling** of a TCP connection
     - E.g. Users use ^C to trigger an urgent signal to cancel an operation
 
-** ACK bit**
+**ACK bit**
 
 ACK bit inidcates that the 32-bit acknowledgemnet number is valid. Acknowledgement number contains the next sequence number that the receiver is expecint to receive.
 
@@ -587,4 +593,44 @@ RST bit will reset a connection. Any host receiving an RST-set packet should imm
 - SYN bit initializes a connection
 - FIN bit initializes that no more data will be sent hence close the connection on both sides.
 
+#### Options
 
+- End of option list
+- No operation
+- Maximum segment size
+- Window scale factor
+- Timestamp
+
+#### Timer
+
+| Timer          | Function                                                                                             |
+|----------------|------------------------------------------------------------------------------------------------------|
+| Connection     | If no response of the SYN after this timeout, the connection is aborted                              |
+| Retransmission | TCP resends the data if unACKed or the timer expires                                                 |
+| Delayed ACK    | The receiver must wait till delayed ACK timeout to send the ACK, otherwise a ACK storm might happend |
+| Persist        | Solve a deadlock problem of `rwnd=0`                                                                 |
+| Keepalive      | Clear the idle connections                                                                           |
+
+**Persist timer**
+
+A deadlock problem if `rwnd=0`
+
+- Receiver sends an ACK with a receiver window size of 0, which tells the sender to wait
+- Then the receiver advertises its updated window size, but the packet is **lost**.
+- So both the sender and receiver are waiting for each other to do someting
+
+TCP persist timer is used to prevent the above deadlock
+
+- When sender receives an ACL with `rwnd=0`, it sets a persist timer
+- When the persist timer goes off and sender hasn't heard anything from the receiver, it transmits a **probe** to the receiver
+- The receiver can respond to the probe, which gives its window size
+- If the `rwnd` still equals zero, the sender sets another persist timer and keep waiting
+
+**Keepalive timer**
+
+Keepalive timer keeps unnecessary resources from being allocated forever
+
+- An empty packet is sent periodically over an idle connection, which should invoke
+    - an ACK from the receiver if it is still up
+    - a reset by RST if it has been rebooted
+    - a timeout if it is down (close connection)
