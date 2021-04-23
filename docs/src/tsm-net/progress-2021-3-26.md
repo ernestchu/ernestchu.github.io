@@ -2,8 +2,8 @@
 
 ## Jupyter Notebook
 
-- [Jupyter Audio Basics](https://nbviewer.jupyter.org/github/ernestchu/tsm-net/blob/main/src/Test/JupyterAudioBasics.ipynb)
-- [Tempo Estimation](https://nbviewer.jupyter.org/github/ernestchu/tsm-net/blob/main/src/Test/TempoEstimation.ipynb)
+- <a href="/JupyterAudioBasics.html" target="_blank">Jupyter Audio Basics</a>
+- <a href="/TempoEstimation.html" target="_blank">Tempo Estimation</a>
 
 ## Architecture
 ![architecture](./assets/images/progress-2021-3-19/architecture.jpeg)

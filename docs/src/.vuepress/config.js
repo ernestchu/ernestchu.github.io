@@ -75,6 +75,7 @@ module.exports = {
           collapsable: false,
           children: [
             'introduction',
+            'progress-2021-4-23',
             'progress-2021-3-26',
             'progress-2021-3-19',
             'progress-2021-3-12',
