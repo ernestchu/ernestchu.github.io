@@ -37,7 +37,7 @@ module.exports = {
     nav: [
       {
         text: 'TSM-Net',
-        link: '/tsm-net/introduction'
+        link: '/tsm-net/'
       },
       {
         text: 'Courses',
@@ -45,36 +45,30 @@ module.exports = {
         items: [
           {
             text: 'CSE350 Computer Network',
-            link: '/courses/cse350-computer-network/introduction'
+            link: '/courses/cse350-computer-network/'
           },
           { 
             text: 'CSE365 Unix System Programming',
-            link: '/courses/cse365-unix-system-programming/introduction'
+            link: '/courses/cse365-unix-system-programming/'
+          },
+          {
+            text: 'CSE360 Design and Implementation of Compiler',
+            link: '/courses/cse360-design-and-implementation-of-compiler/'
           },
           { 
             text: 'CSE491 Network Application Programming',
-            link: '/courses/cse491-network-application-programming/introduction'
+            link: '/courses/cse491-network-application-programming/'
           }
         ]
       }
     ],
     sidebar: {
-      '/guide/': [
-        {
-          title: 'Guide',
-          collapsable: false,
-          children: [
-            '',
-            'using-vue',
-          ]
-        }
-      ],
       '/tsm-net/': [
         {
           title: 'TSM-Net',
           collapsable: false,
           children: [
-            'introduction',
+            '',
             'progress-2021-4-23',
             'progress-2021-3-26',
             'progress-2021-3-19',
@@ -89,7 +83,7 @@ module.exports = {
           title: 'CSE350 Computer Network',
           collapsable: false,
           children: [
-            'introduction',
+            '',
             'chapter-1',
             'chapter-2'
           ]
@@ -100,7 +94,7 @@ module.exports = {
           title: 'CSE365 Unix System Programming',
           collapsable: false,
           children: [
-            'introduction',
+            '',
             'lecture-1',
             'lecture-2',
             'lecture-3',
@@ -111,12 +105,38 @@ module.exports = {
           ]
         }
       ],
+      '/courses/cse360-design-and-implementation-of-compiler/': [
+        {
+          title: 'CSE360 Design and Implementation of Compiler',
+          collapsable: false,
+          children: [
+            '',
+            'compiler-design',
+            {
+              title: 'Lexical Analysis',
+              children: [
+                'lexical-analysis/finite-automata',
+                'lexical-analysis/from-regular-expressions-to-automata',
+                'lexical-analysis/optimization-of-dfa-based-pattern-matchers'
+              ]
+            },
+            {
+              title: 'Syntax Analysis',
+              children: [
+                'syntax-analysis/context-free-grammers',
+                'syntax-analysis/writing-a-grammer',
+                'syntax-analysis/top-down-parsing'
+              ]
+            }
+          ]
+        }
+      ],
       '/courses/cse491-network-application-programming/': [
         {
           title: 'CSE491 Network Application Programming',
           collapsable: false,
           children: [
-            'introduction',
+            '',
             'chapter-1',
             'chapter-2',
             'chapter-3',

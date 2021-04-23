@@ -3,7 +3,7 @@ home: true
 heroImage: null
 heroText: null
 tagline: null
-actionText: Network Application Programming
-actionLink: /courses/cse491-network-application-programming/introduction
+actionText: Design and Implementation of Compiler
+actionLink: /courses/cse360-design-and-implementation-of-compiler/
 footer: Copyright © 2021 Ernie Chu
 ---
