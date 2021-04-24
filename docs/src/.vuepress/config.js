@@ -149,31 +149,19 @@ module.exports = {
     }
   },
   markdown: {
-    extendMarkdown: md => {
-      md.set({
-        html: true,
-      })
-      md.use(require('markdown-it-katex'))
-    },
     lineNumbers: true,
     toc: {
       includeLevel: [2, 3, 4]
     }
   },
-  head: [
-    ['link', {
-      rel: 'stylesheet',
-      href: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css'
-    }],
-    ['link', {
-      rel: "stylesheet",
-      href: "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css"
-    }]
-  ],
   /**
    * Apply plugins，ref：https://v1.vuepress.vuejs.org/zh/plugin/
    */
   plugins: [
-    '@vuepress/plugin-medium-zoom'
+    '@vuepress/plugin-medium-zoom',
+    [
+    '@maginapp/vuepress-plugin-katex',
+      { delimiters: 'dollars' }
+    ]
   ]
 }

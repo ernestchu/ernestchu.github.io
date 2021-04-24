@@ -15,16 +15,18 @@ The materials used in this course include slides and textbooks. The slides are n
 
 > Image from Amazon
 
+2. [Compiler Design Tutorials, GeeksforGeeks](https://www.geeksforgeeks.org/compiler-design-tutorials/)
+
 ## Notes
 This website includes the notes I took throughout the course. The contents are mainly taken from the professor's slides, textbook plus some personal explanations.
 ### Table of contents
 
-1. Compiler Design
+1. [Compiler Design](./compiler-design)
 1. Lexical Analysis
-    - Finite Automata
-    - From Regular Expressions to Automata
-    - Optimization of DFA-Based Pattern Matchers
+    - [Finite Automata](./lexical-analysis/finite-automata)
+    - [From Regular Expressions to Automata](./lexical-analysis/from-regular-expressions-to-automata)
+    - [Optimization of DFA-Based Pattern Matchers](./lexical-analysis/optimization-of-dfa-based-pattern-matchers)
 1. Syntax Analysis
-    - Context-Free Grammers
-    - Writing a Grammer
-    - Top-Down Parsing
+    - [Context-Free Grammers](./syntax-analysis/context-free-grammers)
+    - [Writing a Grammer](./syntax-analysis/writing-a-grammer)
+    - [Top-Down Parsing](./syntax-analysis/top-down-parsing)
