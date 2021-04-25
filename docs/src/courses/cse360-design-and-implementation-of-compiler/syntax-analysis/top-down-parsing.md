@@ -3,9 +3,9 @@
 ### Why FIRST
 **Consider the production rule**
 
-$S \rightarrow cAd$
+$$S \rightarrow cAd$$
 
-$A \rightarrow bc \vert a$
+$$A \rightarrow bc \vert a$$
 
 Assume the input string is $cad$. Scanning from left to write, upon reading $c$, we know that $S \rightarrow cAd$ may be applicable but only if $A$ produces a string led by $a$. Therefore, we need to know what comes first in $A$, i.e. $FIRST \lparen A \rparen$.
 
@@ -18,14 +18,14 @@ To compute $FIRST(X)$ for all grammar symbol $X$, apply the following rules unti
 
 1. If $X$ is a terminal, then $FIRST(X) = \{X\}$.
 1. If $X$ is a nonterminal and $X \rightarrow Y_1Y_2 \cdots Y_k$ is a production for some $k\geq 1$
-    - Place $a$ in $FIRST(X)$ if for some $i$, $a$ is in $FIRST(Y_i)$, and  $\epsilon$ is in all of $FIRST(Y_1), \cdots , FIRST(Y_{i-1})$, i.e., $Y_1 \cdots Y_{i-1} \implies \epsilon$.
+    - Place $a$ in $FIRST(X)$ if for some $i$, $a$ is in $FIRST(Y_i)$, and  $\epsilon$ is in all of $FIRST(Y_1), \cdots , FIRST(Y_{i-1})$, i.e., $Y_1 \cdots Y_{i-1} \xRightarrow{*} \epsilon$.
     - Add $\epsilon$ to $FIRST(X)$ if $\epsilon$ is in $FIRST(Y_j)$ for all $j = 1, 2, \cdots ,k$.
 3. If $X \rightarrow \epsilon$ is a production, then add $\epsilon$ to $FIRST(X)$.
 
 ::: tip Elaboration on the Rules
 
 1. For example, suppose $A \rightarrow \alpha \vert \lparen B \rparen$, then $FIRST(A) = \{ \alpha , \lparen \}$, where $\alpha$ and $\lparen$ are terminals
-1. For example, everythin in $FIRST(Y_1)$ is surely in $FIRST(X)$. If $Y_1$ does not derive $\epsilon$, then we add nothing more to $FIRST(X)$, but if $Y_1 \implies \epsilon$, then we add $FIRST(Y_2)$, and so on.
+1. For example, everythin in $FIRST(Y_1)$ is surely in $FIRST(X)$. If $Y_1$ does not derive $\epsilon$, then we add nothing more to $FIRST(X)$, but if $Y_1 \xRightarrow{*} \epsilon$, then we add $FIRST(Y_2)$, and so on.
 1. The rule should be self-explanatory.
 
 :::
@@ -33,15 +33,15 @@ To compute $FIRST(X)$ for all grammar symbol $X$, apply the following rules unti
 ### Simple example
 Consider the production rules below
 
-$E \rightarrow TE'$
+$$E \rightarrow TE'$$
 
-$E' \rightarrow +TE' \vert \epsilon$
+$$E' \rightarrow +TE' \vert \epsilon$$
 
-$T  \rightarrow FT'$
+$$T  \rightarrow FT'$$
 
-$T' \rightarrow *FT' \vert \epsilon$
+$$T' \rightarrow *FT' \vert \epsilon$$
 
-$F  \rightarrow \lparen E \rparen \vert id$
+$$F  \rightarrow \lparen E \rparen \vert \bold{id}$$
 
 Find the FIRST sets for the nonterminals
 ::: tip Solutoin
@@ -59,13 +59,13 @@ FIRST(T) = FIRST(F) = {(, id}
 FIRST(E) = FIRST(T) = {(, id}
 ```
 
-| Nonterminal | FIRST Set           |
-|-------------|---------------------|
-| $E$         | $\{ \lparen , id\}$ |
-| $E'$        | $\{+, \epsilon \}$  |
-| $T$         | $\{ \lparen , id\}$ |
-| $T'$        | $\{*, \epsilon \}$  |
-| $F$         | $\{ \lparen , id\}$ |
+| Nonterminal | FIRST Set                  |
+|-------------|----------------------------|
+| $E$         | $\{ \lparen , \bold{id}\}$ |
+| $E'$        | $\{+, \epsilon \}$         |
+| $T$         | $\{ \lparen , \bold{id}\}$ |
+| $T'$        | $\{*, \epsilon \}$         |
+| $F$         | $\{ \lparen , \bold{id}\}$ |
 
 :::
 
@@ -95,23 +95,23 @@ To compute $FOLLOW(A)$ for all nonterminals $A$, apply the following rules until
 ### Simple example
 Continue the example above
 
-$E \rightarrow TE'$
+$$E \rightarrow TE'$$
 
-$E' \rightarrow +TE' \vert \epsilon$
+$$E' \rightarrow +TE' \vert \epsilon$$
 
-$T  \rightarrow FT'$
+$$T  \rightarrow FT'$$
 
-$T' \rightarrow *FT' \vert \epsilon$
+$$T' \rightarrow *FT' \vert \epsilon$$
 
-$F  \rightarrow \lparen E \rparen \vert id$
+$$F  \rightarrow \lparen E \rparen \vert \bold{id}$$
 
-| Nonterminal | FIRST Set           |
-|-------------|---------------------|
-| $E$         | $\{ \lparen , id\}$ |
-| $E'$        | $\{+, \epsilon \}$  |
-| $T$         | $\{ \lparen , id\}$ |
-| $T'$        | $\{*, \epsilon \}$  |
-| $F$         | $\{ \lparen , id\}$ |
+| Nonterminal | FIRST Set                  |
+|-------------|----------------------------|
+| $E$         | $\{ \lparen , \bold{id}\}$ |
+| $E'$        | $\{+, \epsilon \}$         |
+| $T$         | $\{ \lparen , \bold{id}\}$ |
+| $T'$        | $\{*, \epsilon \}$         |
+| $F$         | $\{ \lparen , \bold{id}\}$ |
 
 Find the FOLLOW sets for the nonterminals
 
