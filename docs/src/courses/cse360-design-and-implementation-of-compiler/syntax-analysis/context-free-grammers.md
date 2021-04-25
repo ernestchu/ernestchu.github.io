@@ -29,8 +29,8 @@ $$E \xRightarrow[lm]{} -E \xRightarrow[lm]{} - \lparen E \rparen \xRightarrow[lm
 An ambiguous grammar is one that produces more than one leftmost derivation or more than one rightmost derivation for the same sentence. For example, the arithmetic expression grammar (1) permits two distinct leftmost derivations for the sentence $\bold{id} + \bold{id} * \bold{id}$
 
 $$\begin{matrix}
-E & \Rightarrow & E+E                               & E & \Rightarrow & E*E \\
-  & \Rightarrow & \bold{id} + E                     &   & \Rightarrow & E+E*E \\
+E & \Rightarrow & E+E \;\;\;\;\;\;\;\;              & E & \Rightarrow & E*E \;\;\;\;\;\;\; \\
+  & \Rightarrow & \bold{id} + E \;\;\;\;\;\;        &   & \Rightarrow & E+E*E \\
   & \Rightarrow & \bold{id} + E*E                   &   & \Rightarrow & \bold{id} + E*E \\
   & \Rightarrow & \bold{id} + \bold{id} * E         &   & \Rightarrow & \bold{id} + \bold{id} * E \\
   & \Rightarrow & \bold{id} + \bold{id} * \bold{id} &   & \Rightarrow & \bold{id} + \bold{id} * \bold{id} \\
