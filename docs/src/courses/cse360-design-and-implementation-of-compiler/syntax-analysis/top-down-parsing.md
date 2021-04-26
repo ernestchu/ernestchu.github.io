@@ -1,11 +1,32 @@
 # Top-Down Parsing
+The section begins with a general form of top-down parsing, called recursive-descent parsing, which may require backtracking to find the correct $A$-production to be applied. Later we'll introduce predictive parsing, a special case of recursive-descent parsing, where **no backtracking** is required. Predictive parsing chooses the correct $A$-production by looking ahead at the input a fixed number of symbols, typically we may look only at one (that is, the next input symbol).
+
+## Recursive-Descent Parsing
+Consider the grammar
+
+$$\begin{matrix}
+S & \rightarrow & cAd \\
+A & \rightarrow & ab \; \vert \; a \\
+\end{matrix}$$
+
+To construct a parse tree top-down for the input string $w = cad$, begin with the starting node $S$, and the input pointer pointing to the first character from left to right of the input, i.e., $c$.
+
+1. Since $S$ has only one production, we use it to expand $S$ and obtain the tree of the lhs of the figure below.
+1. The leftmost leaf, labeled $c$, matches the first symbol of input $w$, so we advance the input pointer to $a$. Now, use the first alternative $A \rightarrow ab$ to obtain the tree of the middle of the figure below.
+1. Since $b$ does not match $d$, we report failure and go back to $A$ and retract the input pointer to seek for another alternative producing a match. The second alternative $A -> a$ produces the tree of rhs of the figure below. The leaf $a$ and $d$ match to the second and the third symbols of $w$ respectively, we halt and annouce successful completion of parsing.
+
+![recursive-descent-parsing](../assets/graphs/syntax-analysis/top-down-parsing/svg/recursive-descent-parsing.svg)
+
+Noted that a left-recursive grammar can cause a recursive-descent parser, even one with backtracking, to go into an infinite loop. That's why we've talked about the [elimination of left recursion](./writing-a-grammar.md#elimination-of-left-recursion). Also, the backtracking is not an efficient way to construct a parse tree, thus we shall see how to predict the right alternative below.
+
 ## FIRST Set
 ### Why FIRST
 **Consider the production rule**
 
-$$S \rightarrow cAd$$
-
-$$A \rightarrow bc \; \vert \; a$$
+$$\begin{matrix}
+S & \rightarrow & cAd \\
+A & \rightarrow & bc \; \vert \; a \\
+\end{matrix}$$
 
 Assume the input string is $cad$. Scanning from left to write, upon reading $c$, we know that $S \rightarrow cAd$ may be applicable but only if $A$ produces a string led by $a$. Therefore, we need to know what comes first in $A$, i.e. $FIRST \lparen A \rparen$.
 
@@ -30,18 +51,16 @@ To compute $FIRST(X)$ for all grammar symbol $X$, apply the following rules unti
 
 :::
 
-### Simple example
+### A simple example
 Consider the production rules below
 
-$$E \rightarrow TE'$$
-
-$$E' \rightarrow +TE' \; \vert \; \epsilon$$
-
-$$T  \rightarrow FT'$$
-
-$$T' \rightarrow *FT' \; \vert \; \epsilon$$
-
-$$F  \rightarrow \lparen E \rparen \; \vert \; \bold{id}$$
+$$\begin{matrix}
+E  & \rightarrow & TE' \;\;\;\;\;\;\; \\
+E' & \rightarrow & +TE' \; \vert \; \epsilon \\
+T  & \rightarrow & FT' \;\;\;\;\;\;\; \\
+T' & \rightarrow & *FT' \; \vert \; \epsilon \\
+F  & \rightarrow & \lparen E \rparen \; \vert \; \bold{id} \\
+\end{matrix}$$
 
 Find the FIRST sets for the nonterminals
 ::: tip Solutoin
@@ -75,9 +94,10 @@ FIRST(E) = FIRST(T) = {(, id}
 ### Why FOLLOW
 **Consider the production rule**
 
-$A \rightarrow aBb$
-
-$B \rightarrow c \; \vert \; \epsilon$
+$$\begin{matrix}
+A & \rightarrow & aBb \\
+B & \rightarrow & c \; \vert \; \epsilon \\
+\end{matrix}$$
 
 Suppose the string to parse is $ab$. Scanning from left to write, upon reading $a$, we know that $A \rightarrow aBb$ may be applicable but only if $B$ can vanish **and the character follows  $B$ is $b$**. That's why we need to know what follows $B$, i.e. $FOLLOW \lparen B \rparen$
 
@@ -92,18 +112,16 @@ To compute $FOLLOW(A)$ for all nonterminals $A$, apply the following rules until
 1. If there is a production $A \rightarrow \alpha B \beta$, then everything in $FIRST(\beta)$ except $\epsilon$ is in $FOLLOW(B)$.
 1. If there is a production $A \rightarrow \alpha B$, or a production $A \rightarrow \alpha B \beta$, where $FIRST(\beta)$ contains $\epsilon$, then everything in $FOLLOW(A)$ is in $FOLLOW(B)$.
 
-### Simple example
+### A simple example
 Continue the example above
 
-$$E \rightarrow TE'$$
-
-$$E' \rightarrow +TE' \; \vert \; \epsilon$$
-
-$$T  \rightarrow FT'$$
-
-$$T' \rightarrow *FT' \; \vert \; \epsilon$$
-
-$$F  \rightarrow \lparen E \rparen \; \vert \; \bold{id}$$
+$$\begin{matrix}
+E  & \rightarrow & TE' \;\;\;\;\;\;\; \\
+E' & \rightarrow & +TE' \; \vert \; \epsilon \\
+T  & \rightarrow & FT' \;\;\;\;\;\;\; \\
+T' & \rightarrow & *FT' \; \vert \; \epsilon \\
+F  & \rightarrow & \lparen E \rparen \; \vert \; \bold{id} \\
+\end{matrix}$$
 
 | Nonterminal | FIRST Set                  |
 |-------------|----------------------------|
@@ -142,3 +160,10 @@ FOLLOW(F) = {*} ∪ FOLLOW(T) = {*, +, $, )}
 
 :::
 
+
+## LL(1) Grammars
+Predictive parsers, that is, recursive-descent parsers needing no backtracking, can be constructed for a class of grammars called **LL(1)**. 
+
+1. The first "L" in LL(1) stands for scanning the input from **left to right**, 
+1. The second "L" for producing a **leftmost derivation**
+1. The "1" for using **one input** symbol of lookahead at each step to make parsing action decisions.
