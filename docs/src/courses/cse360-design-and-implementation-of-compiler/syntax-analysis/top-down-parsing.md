@@ -152,11 +152,11 @@ FOLLOW(F) = {*} ∪ FOLLOW(T) = {*, +, $, )}
 
 | Nonterminal | FOLLOW Set                                   |
 |-------------|----------------------------------------------|
-| $E$         | $\{ \text{\textdollar} , \lparen \}$         |
-| $E'$        | $\{ \text{\textdollar} , \lparen \}$         |
-| $T$         | $\{ + , \text{\textdollar} , \lparen \}$     |
-| $T'$        | $\{ + , \text{\textdollar} , \lparen \}$     |
-| $F$         | $\{ * , + , \text{\textdollar} , \lparen \}$ |
+| $E$         | $\{ \text{\textdollar} , \rparen \}$         |
+| $E'$        | $\{ \text{\textdollar} , \rparen \}$         |
+| $T$         | $\{ + , \text{\textdollar} , \rparen \}$     |
+| $T'$        | $\{ + , \text{\textdollar} , \rparen \}$     |
+| $F$         | $\{ * , + , \text{\textdollar} , \rparen \}$ |
 
 :::
 
@@ -167,3 +167,72 @@ Predictive parsers, that is, recursive-descent parsers needing no backtracking, 
 1. The first "L" in LL(1) stands for scanning the input from **left to right**, 
 1. The second "L" for producing a **leftmost derivation**
 1. The "1" for using **one input** symbol of lookahead at each step to make parsing action decisions.
+
+### Definition of LL(1) grammars
+A grammar $G$ is LL(1) if and only if whenever $A \rightarrow \alpha \; \vert \; \beta$ are two distinct productions of $G$, the following conditions hold:
+
+1. For no terminal $a$ do both $\alpha$ and $\beta$ derive strings beginning with $a$.
+    - Achieved by left-factoring
+    - Equivalent to that $FIRST \lparen \alpha \rparen$ and $FIRST \lparen \beta \rparen$ are disjoint sets.
+1. At most one of $\alpha$ and $\beta$ can derive the empty string.
+1. If $\beta \xRightarrow{*} \epsilon$, then $\alpha$ does not derive any string beginning with a terminal in $FOLLOW \lparen A \rparen$, and vice versa.
+    - Equivalent to that if $\epsilon$ is in $FIRST \lparen \beta \rparen$, then $FIRST \lparen \alpha \rparen$ and $FOLLOW \lparen A \rparen$ are disjoint sets, and vice versa.
+
+## Construction of a predictive parsing table
+For each production $A \rightarrow \alpha$ of the grammar, do the following:
+
+1. For each terminal $a$ in $FIRST \lparen \alpha \rparen$, add $A \rightarrow \alpha$ to $M \lbrack A, a \rbrack$
+1. If $\epsilon$ is in $FIRST \lparen \alpha \rparen$, then for each terminal $b$ in $FOLLOW \lparen A \rparen$, add $A \rightarrow \alpha$ to $M \lbrack A, b \rbrack$. If $\epsilon$ is in $FIRST \lparen \alpha \rparen$ and $\$$ is in $FOLLOW \lparen A \rparen$, add $A \rightarrow \alpha$ to $M \lbrack A, \text{\textdollar} \rbrack$ as well.
+
+Use the same grammar above for example, but we'll use the standard CFG for a clearer view
+
+$$\begin{matrix}
+E  & \rightarrow & TE' \\
+E' & \rightarrow & +TE' \\
+E' & \rightarrow & \epsilon \\
+T  & \rightarrow & FT' \\
+T' & \rightarrow & *FT' \\
+T' & \rightarrow & \epsilon \\
+F  & \rightarrow & \lparen E \rparen \\
+F  & \rightarrow & \bold{id} \\
+\end{matrix}$$
+
+| Nonterminal | FIRST Set                  | FOLLOW Set                                   |
+|-------------|----------------------------|----------------------------------------------|
+| $E$         | $\{ \lparen , \bold{id}\}$ | $\{ \text{\textdollar} , \rparen \}$         |
+| $E'$        | $\{+, \epsilon \}$         | $\{ \text{\textdollar} , \rparen \}$         |
+| $T$         | $\{ \lparen , \bold{id}\}$ | $\{ + , \text{\textdollar} , \rparen \}$     |
+| $T'$        | $\{*, \epsilon \}$         | $\{ + , \text{\textdollar} , \rparen \}$     |
+| $F$         | $\{ \lparen , \bold{id}\}$ | $\{ * , + , \text{\textdollar} , \rparen \}$ |
+
+```
+For E -> TE'
+    1.  M[E, (]  = E -> TE'
+        M[E, id] = E -> TE'
+
+For E' -> +TE'
+    1.  M[E', +] = E' -> +TE'
+
+For E' -> ε
+    2.  M[E', )] = E' -> ε
+        M[E', $] = E' -> ε
+
+For T -> FT'
+    1.  M[T, (]  = T -> FT'
+        M[T, id] = T -> FT'
+
+For T' -> *FT'
+    1.  M[T', *] = T' -> *FT'
+
+For T' -> ε
+    2.  M[T', +] = T' -> ε
+        M[T', )] = T' -> ε
+        M[T', $] = T' -> ε
+
+For F -> (E)
+    1.  M[F, (]  = F -> (E)
+
+For F -> id
+    1.  M[F, id] = F -> id
+```
+
