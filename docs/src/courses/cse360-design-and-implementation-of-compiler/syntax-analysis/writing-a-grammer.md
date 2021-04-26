@@ -40,3 +40,75 @@ $$\begin{matrix}
                             & \vert         & \bold{if} \; \textit{expr} \; \bold{then} \; \textit{matched\_stmt} \; \bold{else} \; \textit{unmatched\_stmt} \\
 \end{matrix}$$
 
+## Elimination of Left Recursion
+A grammar is *left recursive* if it has a nonterminal $A$ such that there is a derivation $A \xRightarrow{+} A \alpha$ for some string $\alpha$. Top-down parsing methods cannot handle left-recursive grammars, so a transformation is needed to eliminate left recursion.
+
+### A simple left recursion
+The left-recursive production $A \rightarrow A \alpha \vert \beta$ could be replaced by non-left-recursive productions without changing the strings derivable from $A$.
+
+$$\begin{matrix}
+A  & \rightarrow & \beta A' \;\; \\
+A' & \rightarrow & \alpha A' \; \vert \; \epsilon \\
+\end{matrix}$$
+
+#### Exercise
+Consider the following grammar for arithmetic expressions.
+
+$$\begin{matrix}
+E & \rightarrow & E + T \; \vert \; T \\
+T & \rightarrow & T * F \; \vert \; F \\
+F & \rightarrow & \lparen E \rparen \; \vert \; \bold{id} \;\;\; \\
+\end{matrix}$$
+
+Eliminating the immediate left recursion (production of the form $A \xRightarrow{+} A \alpha$) to the production for E and then for T.
+
+::: tip Solution
+$E \rightarrow E + T \; \vert \; T$ are replaced by
+
+$$\begin{matrix}
+E  & \rightarrow & TE' \;\;\;\;\;\; \\
+E' & \rightarrow & +TE' \; \vert \; \epsilon \\
+\end{matrix}$$
+
+$T \rightarrow T * F \; \vert \; F$ are replaced by
+
+$$\begin{matrix}
+T  & \rightarrow & FT' \;\;\;\;\;\; \\
+T' & \rightarrow & *FT' \; \vert \; \epsilon \\
+\end{matrix}$$
+
+:::
+
+### The general case
+Here, we shall deduce the general form for this formula. Immediate left recursion can be eliminated by the following technique, which works for any number of $A$-productions. First, group the productions as
+
+$$A \rightarrow A \alpha_1 \; \vert \; A \alpha_2 \; \vert \; \cdots \; \vert \; A \alpha_m \; \vert \; \beta_1 \; \vert \; \beta_2 \; \vert \; \cdots \; \vert \; \beta_n$$
+
+where no $\beta_i$ begins with an $A$. Then replace the $A$-productions by
+
+$$\begin{matrix}
+A  & \rightarrow & \beta_1 A' \; \vert \; \beta_2 A' \; \vert \; \cdots \; \vert \; \beta_n A' \; \\
+A' & \rightarrow & \alpha_1 A' \; \vert \; \alpha_2 A' \; \vert \; \cdots \; \vert \; \alpha_m A' \\
+\end{matrix}$$
+
+This eliminates all immediate left recursion, but it doesn't eliminate left recursion involving derications of two ore more steps (not immediate). For example
+
+$$\begin{matrix}
+S & \rightarrow & Aa \; \vert \; b \;\;\;\;\;\;\; \\
+A & \rightarrow & Ac \; \vert \; Sd \; \vert \; \epsilon \\
+\end{matrix}$$ (2)
+
+The nonterminal $S$ is left recursive becauses $S \Rightarrow Aa \Rightarrow Sda$. but it is not immediately left recursive. Hence it can not be eliminate by the above technique. But still, in some cases we can try to handle it by the substitution. The lowe part of the grammar (2) becomes
+
+$$A \rightarrow Ac \; \vert \; Aad \; \vert \; bd \; \vert \; \epsilon$$
+
+Eliminating the immediate left recursion among these $A$-productions yields the
+following grammar.
+
+$$\begin{matrix}
+S  & \rightarrow & Aa \; \vert \; b \;\;\;\;\;\;\;\;\;\;\; \\
+A  & \rightarrow & bdA' \; \vert \; A' \;\;\;\;\;\; \\
+A' & \rightarrow & cA' \; \vert \; adA' \; \vert \; \epsilon \\
+\end{matrix}$$
+
+

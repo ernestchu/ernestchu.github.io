@@ -2,7 +2,7 @@
 ## Derivations
 Beginning with the start symbol, each production rule rewrites a nonterminal by its right hand side. For example
 
-$$E \rightarrow E+E \vert E*E \vert -E | \lparen E \rparen \vert \bold{id}$$ (1)
+$$E \rightarrow E+E \; \vert \; E*E \; \vert \; -E \; \vert \; \lparen E \rparen \; \vert \; \bold{id}$$ (1)
 
 The replacement of a single $E$ by $-E$ is written as
 

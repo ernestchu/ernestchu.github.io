@@ -5,7 +5,7 @@
 
 $$S \rightarrow cAd$$
 
-$$A \rightarrow bc \vert a$$
+$$A \rightarrow bc \; \vert \; a$$
 
 Assume the input string is $cad$. Scanning from left to write, upon reading $c$, we know that $S \rightarrow cAd$ may be applicable but only if $A$ produces a string led by $a$. Therefore, we need to know what comes first in $A$, i.e. $FIRST \lparen A \rparen$.
 
@@ -24,7 +24,7 @@ To compute $FIRST(X)$ for all grammar symbol $X$, apply the following rules unti
 
 ::: tip Elaboration on the Rules
 
-1. For example, suppose $A \rightarrow \alpha \vert \lparen B \rparen$, then $FIRST(A) = \{ \alpha , \lparen \}$, where $\alpha$ and $\lparen$ are terminals
+1. For example, suppose $A \rightarrow \alpha \; \vert \; \lparen B \rparen$, then $FIRST(A) = \{ \alpha , \lparen \}$, where $\alpha$ and $\lparen$ are terminals
 1. For example, everythin in $FIRST(Y_1)$ is surely in $FIRST(X)$. If $Y_1$ does not derive $\epsilon$, then we add nothing more to $FIRST(X)$, but if $Y_1 \xRightarrow{*} \epsilon$, then we add $FIRST(Y_2)$, and so on.
 1. The rule should be self-explanatory.
 
@@ -35,13 +35,13 @@ Consider the production rules below
 
 $$E \rightarrow TE'$$
 
-$$E' \rightarrow +TE' \vert \epsilon$$
+$$E' \rightarrow +TE' \; \vert \; \epsilon$$
 
 $$T  \rightarrow FT'$$
 
-$$T' \rightarrow *FT' \vert \epsilon$$
+$$T' \rightarrow *FT' \; \vert \; \epsilon$$
 
-$$F  \rightarrow \lparen E \rparen \vert \bold{id}$$
+$$F  \rightarrow \lparen E \rparen \; \vert \; \bold{id}$$
 
 Find the FIRST sets for the nonterminals
 ::: tip Solutoin
@@ -77,7 +77,7 @@ FIRST(E) = FIRST(T) = {(, id}
 
 $A \rightarrow aBb$
 
-$B \rightarrow c \vert \epsilon$
+$B \rightarrow c \; \vert \; \epsilon$
 
 Suppose the string to parse is $ab$. Scanning from left to write, upon reading $a$, we know that $A \rightarrow aBb$ may be applicable but only if $B$ can vanish **and the character follows  $B$ is $b$**. That's why we need to know what follows $B$, i.e. $FOLLOW \lparen B \rparen$
 
@@ -97,13 +97,13 @@ Continue the example above
 
 $$E \rightarrow TE'$$
 
-$$E' \rightarrow +TE' \vert \epsilon$$
+$$E' \rightarrow +TE' \; \vert \; \epsilon$$
 
 $$T  \rightarrow FT'$$
 
-$$T' \rightarrow *FT' \vert \epsilon$$
+$$T' \rightarrow *FT' \; \vert \; \epsilon$$
 
-$$F  \rightarrow \lparen E \rparen \vert \bold{id}$$
+$$F  \rightarrow \lparen E \rparen \; \vert \; \bold{id}$$
 
 | Nonterminal | FIRST Set                  |
 |-------------|----------------------------|
