@@ -27,6 +27,6 @@ This website includes the notes I took throughout the course. The contents are m
     - [From Regular Expressions to Automata](./lexical-analysis/from-regular-expressions-to-automata)
     - [Optimization of DFA-Based Pattern Matchers](./lexical-analysis/optimization-of-dfa-based-pattern-matchers)
 1. Syntax Analysis
-    - [Context-Free Grammers](./syntax-analysis/context-free-grammers)
-    - [Writing a Grammer](./syntax-analysis/writing-a-grammer)
+    - [Context-Free Grammars](./syntax-analysis/context-free-grammars)
+    - [Writing a Grammar](./syntax-analysis/writing-a-grammar)
     - [Top-Down Parsing](./syntax-analysis/top-down-parsing)

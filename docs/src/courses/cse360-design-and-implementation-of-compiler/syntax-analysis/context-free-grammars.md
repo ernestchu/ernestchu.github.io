@@ -1,4 +1,4 @@
-# Context-Free Grammers
+# Context-Free Grammars
 ## Derivations
 Beginning with the start symbol, each production rule rewrites a nonterminal by its right hand side. For example
 
@@ -36,7 +36,7 @@ E & \Rightarrow & E+E \;\;\;\;\;\;\;\;              & E & \Rightarrow & E*E \;\;
   & \Rightarrow & \bold{id} + \bold{id} * \bold{id} &   & \Rightarrow & \bold{id} + \bold{id} * \bold{id} \\
 \end{matrix}$$
 
-![ambiguity](../assets/graphs/syntax-analysis/context-free-grammers/svg/ambiguity.svg)
+![ambiguity](../assets/graphs/syntax-analysis/context-free-grammars/svg/ambiguity.svg)
 
 However, we would normally evaluate an expression like $a+b*c$ as $a + \lparen b*c \rparen$, rather than as $\lparen a+b \rparen * c$.
 

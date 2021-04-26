@@ -123,8 +123,8 @@ module.exports = {
             {
               title: 'Syntax Analysis',
               children: [
-                'syntax-analysis/context-free-grammers',
-                'syntax-analysis/writing-a-grammer',
+                'syntax-analysis/context-free-grammars',
+                'syntax-analysis/writing-a-grammar',
                 'syntax-analysis/top-down-parsing'
               ]
             }
