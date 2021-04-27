@@ -2,6 +2,8 @@
 ## Nondeterministic Finite Automata
 Nondeterministic finite automata (NFA) have no restrictions on the labels of their edges. A symbol can label several edges out of the same state, and $\epsilon$, the empty string, is a possible label.
 
+[[toc]]
+
 #### Example
 The transition graph for an NFA recognizing the language of regular expression `(a|b)*abb`. It is similar to regular expressions that describe languages of real interest.
 
