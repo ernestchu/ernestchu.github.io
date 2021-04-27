@@ -20,7 +20,7 @@ $$\begin{matrix}
 
 Here $other$ stands for any other statement. According to this grammar, the compound conditional statement
 
-$$\bold{if} \; E_1 \; \bold{then} \; S_1 \; \bold{else} \; \bold{if} \; E_2 \; \bold{then} \; S_2 \; \bold{else} \; S_3$$
+$$\bold{if} \; E_1 \; \bold{then} \; \bold{if} \; E_2 \; \bold{then} \; S_1 \; \bold{else} \; S_2$$
 
 is an example showing Grammar (1) is ambiguous since it has two parse trees
 
