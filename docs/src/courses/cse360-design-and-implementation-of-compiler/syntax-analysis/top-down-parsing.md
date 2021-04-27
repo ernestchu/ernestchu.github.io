@@ -1,6 +1,8 @@
 # Top-Down Parsing
 The section begins with a general form of top-down parsing, called recursive-descent parsing, which may require backtracking to find the correct $A$-production to be applied. Later we'll introduce predictive parsing, a special case of recursive-descent parsing, where **no backtracking** is required. Predictive parsing chooses the correct $A$-production by looking ahead at the input a fixed number of symbols, typically we may look only at one (that is, the next input symbol).
 
+[[toc]]
+
 ## Recursive-Descent Parsing
 Consider the grammar
 
@@ -164,7 +166,6 @@ FOLLOW(F) = {*} ∪ FOLLOW(T) = {*, +, $, )}
 ## LL(1) Grammars
 Predictive parsers, that is, recursive-descent parsers needing no backtracking, can be constructed for a class of grammars called **LL(1)**. 
 
-1. No left-recursion or ambiguity
 1. The first "L" in LL(1) stands for scanning the input from **left to right**, 
 1. The second "L" for producing a **leftmost derivation**
 1. The "1" for using **one input** symbol of lookahead at each step to make parsing action decisions.
@@ -172,8 +173,8 @@ Predictive parsers, that is, recursive-descent parsers needing no backtracking, 
 ### Definition of LL(1) grammars
 A grammar $G$ is LL(1) if and only if whenever $A \rightarrow \alpha \; \vert \; \beta$ are two distinct productions of $G$, the following conditions hold:
 
+1. No left-recursion or ambiguity
 1. For no terminal $a$ do both $\alpha$ and $\beta$ derive strings beginning with $a$.
-    - Achieved by left-factoring
     - Equivalent to that $FIRST \lparen \alpha \rparen$ and $FIRST \lparen \beta \rparen$ are disjoint sets.
 1. At most one of $\alpha$ and $\beta$ can derive the empty string.
 1. If $\beta \xRightarrow{*} \epsilon$, then $\alpha$ does not derive any string beginning with a terminal in $FOLLOW \lparen A \rparen$, and vice versa.
@@ -188,7 +189,7 @@ For each production $A \rightarrow \alpha$ of the grammar, do the following:
 
 Finally, set $M \lbrack A, a \rbrack$ to **error** if there's no production at all.
 
-Use the same grammar above for example, but we'll use the standard CFG for a clearer view
+Use the same grammar above for example, but we'll use the standard BNF for a clearer view
 
 $$\begin{matrix}
 E  & \rightarrow & TE' \\
@@ -248,6 +249,59 @@ For F -> id
 | $T'$ |                           | $T' \rightarrow \epsilon$ | $T' \rightarrow *FT'$ |                                   | $T' \rightarrow \epsilon$ | $T' \rightarrow \epsilon$ |
 | $F$  | $F \rightarrow \bold{id}$ |                           |                       | $F \rightarrow \lparen E \rparen$ |                           |                           |
 
+### PREDICT sets and LL(1) verification
+In some literature, the predictive parsing table can be viewed as **PREDICT sets**. For each production $A \rightarrow \alpha$ of the grammar, add $a$ into $PREDICT \lparen A \rightarrow \alpha \rparen$ if $M \lbrack A, a \rbrack$ is $A \rightarrow \alpha$.
+
+| Production                        | PREDICT Set                             |
+|-----------------------------------|-----------------------------------------|
+| $E \rightarrow TE'$               | $\{ \bold{id} , \lparen \}$             |
+| $E' \rightarrow +TE'$             | $\{ + \}$                               |
+| $E' \rightarrow \epsilon$         | $\{ \rparen , \text{\textdollar} \}$    |
+| $T \rightarrow FT'$               | $\{ \bold{id} , \lparen \}$             |
+| $T' \rightarrow *FT'$             | $\{ * \}$                               |
+| $T' \rightarrow \epsilon$         | $\{ +, \rparen , \text{\textdollar} \}$ |
+| $F \rightarrow \lparen E \rparen$ | $\{ \lparen \}$                         |
+| $F \rightarrow \bold{id}$         | $\{ \bold{id} \}$                       |
+
+We can further combine the 2<sup>nd</sup> and 4<sup>th</sup> conditions in the [definition of LL(1) grammars](#definition-of-ll-1-grammars) into the examination of PREDICT sets. LL(1) contains exactly those grammars that have **disjoint PREDICT sets** for productions that share a common left-hand side. That is, at most **one** production can be added into each entry in the predictive parsing table $M$.
+
+::: tip Example
+
+| Production                        | PREDICT Set                             |
+|-----------------------------------|-----------------------------------------|
+| $E' \rightarrow +TE'$             | $\{ + \}$                               |
+| $E' \rightarrow \epsilon$         | $\{ \rparen , \text{\textdollar} \}$    |
+
+|      | $\bold{id}$               | $+$                       | $*$                   | $\lparen$                         | $\rparen$                 | $\$$                      |
+|------|---------------------------|---------------------------|-----------------------|-----------------------------------|---------------------------|---------------------------|
+| $E'$ |                           | $E' \rightarrow +TE'$     |                       |                                   | $E' \rightarrow \epsilon$ | $E' \rightarrow \epsilon$ |
+
+**LL(1)!**
+
+| Production                        | PREDICT Set                             |
+|-----------------------------------|-----------------------------------------|
+| $T' \rightarrow *FT'$             | $\{ * \}$                               |
+| $T' \rightarrow \epsilon$         | $\{ +, \rparen , \text{\textdollar} \}$ |
+
+|      | $\bold{id}$               | $+$                       | $*$                   | $\lparen$                         | $\rparen$                 | $\$$                      |
+|------|---------------------------|---------------------------|-----------------------|-----------------------------------|---------------------------|---------------------------|
+| $T'$ |                           | $T' \rightarrow \epsilon$ | $T' \rightarrow *FT'$ |                                   | $T' \rightarrow \epsilon$ | $T' \rightarrow \epsilon$ |
+
+**LL(1)!**
+
+| Production                        | PREDICT Set                             |
+|-----------------------------------|-----------------------------------------|
+| $F \rightarrow \lparen E \rparen$ | $\{ \lparen \}$                         |
+| $F \rightarrow \bold{id}$         | $\{ \bold{id} \}$                       |
+
+|      | $\bold{id}$               | $+$                       | $*$                   | $\lparen$                         | $\rparen$                 | $\$$                      |
+|------|---------------------------|---------------------------|-----------------------|-----------------------------------|---------------------------|---------------------------|
+| $F$  | $F \rightarrow \bold{id}$ |                           |                       | $F \rightarrow \lparen E \rparen$ |                           |                           |
+
+**LL(1)!**
+:::
+
+
 ### Table-driven predictive parsing
 
 **Model of a table-driven predictive parser**
@@ -285,23 +339,23 @@ Continue from above
 
 **Moves made by a predictive parser on input** $\bold{id} + \bold{id} * \bold{id}$
 
-|Matched|Input|Action|Stack|
-|-|-|-|-|
-||$\bold{id} + \bold{id} * \bold{id}\$$||$E\$$|
-||$\bold{id} + \bold{id} * \bold{id}\$$|output $E \rightarrow TE'$|$TE'\$$|
-||$\bold{id} + \bold{id} * \bold{id}\$$|output $T \rightarrow FT'$|$FT'E'\$$|
-||$\bold{id} + \bold{id} * \bold{id}\$$|output $F \rightarrow \bold{id}$|$\bold{id} T'E'\$$|
-|$\bold{id}$|$+ \bold{id} * \bold{id}\$$|match $\bold{id}$|$T'E'\$$|
-|$\bold{id}$|$+ \bold{id} * \bold{id}\$$|output $T' \rightarrow \epsilon$|$E'\$$|
-|$\bold{id}$|$+ \bold{id} * \bold{id}\$$|output $E' \rightarrow +TE'$|$+TE'\$$|
-|$\bold{id} +$|$\bold{id} * \bold{id}\$$|match $+$|$TE'\$$|
-|$\bold{id} +$|$\bold{id} * \bold{id}\$$|output $T \rightarrow FT'$|$FT'E'\$$|
-|$\bold{id} +$|$\bold{id} * \bold{id}\$$|output $F \rightarrow \bold{id}$|$\bold{id} T'E'\$$|
-|$\bold{id} + \bold{id}$|$* \bold{id}\$$|match $\bold{id}$|$T'E'\$$|
-|$\bold{id} + \bold{id}$|$* \bold{id}\$$|output $T' \rightarrow *FT'$|$\bold{id} *FT'E'\$$|
-|$\bold{id} + \bold{id} *$|$\bold{id}\$$|match $*$|$FT'E'\$$|
-|$\bold{id} + \bold{id} *$|$\bold{id}\$$|output $T' \rightarrow *FT'$|$FT'E'\$$|
-|$\bold{id} + \bold{id} *$|$\bold{id}\$$|output $F \rightarrow \bold{id}$|$\bold{id} T'E'\$$|
-|$\bold{id} + \bold{id} * \bold{id}$|$\$$|match $\bold{id}$|$T'E'\$$|
-|$\bold{id} + \bold{id} * \bold{id}$|$\$$|output $T' \rightarrow \epsilon$|$E'\$$|
-|$\bold{id} + \bold{id} * \bold{id}$|$\$$|output $E' \rightarrow \epsilon$|$\$$|
+| Matched                             | Input                                 | Action                           | Stack                |
+|-------------------------------------|---------------------------------------|----------------------------------|----------------------|
+|                                     | $\bold{id} + \bold{id} * \bold{id}\$$ |                                  | $E\$$                |
+|                                     | $\bold{id} + \bold{id} * \bold{id}\$$ | output $E \rightarrow TE'$       | $TE'\$$              |
+|                                     | $\bold{id} + \bold{id} * \bold{id}\$$ | output $T \rightarrow FT'$       | $FT'E'\$$            |
+|                                     | $\bold{id} + \bold{id} * \bold{id}\$$ | output $F \rightarrow \bold{id}$ | $\bold{id} T'E'\$$   |
+| $\bold{id}$                         | $+ \bold{id} * \bold{id}\$$           | match $\bold{id}$                | $T'E'\$$             |
+| $\bold{id}$                         | $+ \bold{id} * \bold{id}\$$           | output $T' \rightarrow \epsilon$ | $E'\$$               |
+| $\bold{id}$                         | $+ \bold{id} * \bold{id}\$$           | output $E' \rightarrow +TE'$     | $+TE'\$$             |
+| $\bold{id} +$                       | $\bold{id} * \bold{id}\$$             | match $+$                        | $TE'\$$              |
+| $\bold{id} +$                       | $\bold{id} * \bold{id}\$$             | output $T \rightarrow FT'$       | $FT'E'\$$            |
+| $\bold{id} +$                       | $\bold{id} * \bold{id}\$$             | output $F \rightarrow \bold{id}$ | $\bold{id} T'E'\$$   |
+| $\bold{id} + \bold{id}$             | $* \bold{id}\$$                       | match $\bold{id}$                | $T'E'\$$             |
+| $\bold{id} + \bold{id}$             | $* \bold{id}\$$                       | output $T' \rightarrow *FT'$     | $\bold{id} *FT'E'\$$ |
+| $\bold{id} + \bold{id} *$           | $\bold{id}\$$                         | match $*$                        | $FT'E'\$$            |
+| $\bold{id} + \bold{id} *$           | $\bold{id}\$$                         | output $T' \rightarrow *FT'$     | $FT'E'\$$            |
+| $\bold{id} + \bold{id} *$           | $\bold{id}\$$                         | output $F \rightarrow \bold{id}$ | $\bold{id} T'E'\$$   |
+| $\bold{id} + \bold{id} * \bold{id}$ | $\$$                                  | match $\bold{id}$                | $T'E'\$$             |
+| $\bold{id} + \bold{id} * \bold{id}$ | $\$$                                  | output $T' \rightarrow \epsilon$ | $E'\$$               |
+| $\bold{id} + \bold{id} * \bold{id}$ | $\$$                                  | output $E' \rightarrow \epsilon$ | $\$$                 |

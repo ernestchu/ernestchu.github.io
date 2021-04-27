@@ -1,4 +1,7 @@
 # Context-Free Grammars
+
+[[toc]]
+
 ## Derivations
 Beginning with the start symbol, each production rule rewrites a nonterminal by its right hand side. For example
 

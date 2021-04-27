@@ -1,6 +1,8 @@
 # Writing a Grammar
 This section begins with a discussion of how to divide work between a lexical analyzer and a parser. We then consider several transformations that could be applied to get a grammar more suitable for parsing. One technique can **eliminate ambiguity** in the grammar, and other techniques, **left-recursion elimination** and **left factoring**, are useful for rewriting grammars so they become suitable for **top-down parsing**.
 
+[[toc]]
+
 ## Lexical Versus Syntactic Analysis
 We typically use **regular expressions** to construct **lexical analyzers** while using **grammars** to construct **parsers**. In fact, everything that can be described by a regular expression can also be described by a grammar. We may ask, why use regular expressions to define the lexical syntax. There are several reasons:
 
