@@ -164,6 +164,7 @@ FOLLOW(F) = {*} ∪ FOLLOW(T) = {*, +, $, )}
 ## LL(1) Grammars
 Predictive parsers, that is, recursive-descent parsers needing no backtracking, can be constructed for a class of grammars called **LL(1)**. 
 
+1. No left-recursion or ambiguity
 1. The first "L" in LL(1) stands for scanning the input from **left to right**, 
 1. The second "L" for producing a **leftmost derivation**
 1. The "1" for using **one input** symbol of lookahead at each step to make parsing action decisions.
@@ -178,11 +179,14 @@ A grammar $G$ is LL(1) if and only if whenever $A \rightarrow \alpha \; \vert \;
 1. If $\beta \xRightarrow{*} \epsilon$, then $\alpha$ does not derive any string beginning with a terminal in $FOLLOW \lparen A \rparen$, and vice versa.
     - Equivalent to that if $\epsilon$ is in $FIRST \lparen \beta \rparen$, then $FIRST \lparen \alpha \rparen$ and $FOLLOW \lparen A \rparen$ are disjoint sets, and vice versa.
 
-## Construction of a predictive parsing table
+## Nonrecursive Predictive Parsing
+### Construction of a predictive parsing table
 For each production $A \rightarrow \alpha$ of the grammar, do the following:
 
 1. For each terminal $a$ in $FIRST \lparen \alpha \rparen$, add $A \rightarrow \alpha$ to $M \lbrack A, a \rbrack$
 1. If $\epsilon$ is in $FIRST \lparen \alpha \rparen$, then for each terminal $b$ in $FOLLOW \lparen A \rparen$, add $A \rightarrow \alpha$ to $M \lbrack A, b \rbrack$. If $\epsilon$ is in $FIRST \lparen \alpha \rparen$ and $\$$ is in $FOLLOW \lparen A \rparen$, add $A \rightarrow \alpha$ to $M \lbrack A, \text{\textdollar} \rbrack$ as well.
+
+Finally, set $M \lbrack A, a \rbrack$ to **error** if there's no production at all.
 
 Use the same grammar above for example, but we'll use the standard CFG for a clearer view
 
@@ -236,3 +240,68 @@ For F -> id
     1.  M[F, id] = F -> id
 ```
 
+|      | $\bold{id}$               | $+$                       | $*$                   | $\lparen$                         | $\rparen$                 | $\$$                      |
+|------|---------------------------|---------------------------|-----------------------|-----------------------------------|---------------------------|---------------------------|
+| $E$  | $E \rightarrow TE'$       |                           |                       | $E \rightarrow TE'$               |                           |                           |
+| $E'$ |                           | $E' \rightarrow +TE'$     |                       |                                   | $E' \rightarrow \epsilon$ | $E' \rightarrow \epsilon$ |
+| $T$  | $T \rightarrow FT'$       |                           |                       | $T \rightarrow FT'$               |                           |                           |
+| $T'$ |                           | $T' \rightarrow \epsilon$ | $T' \rightarrow *FT'$ |                                   | $T' \rightarrow \epsilon$ | $T' \rightarrow \epsilon$ |
+| $F$  | $F \rightarrow \bold{id}$ |                           |                       | $F \rightarrow \lparen E \rparen$ |                           |                           |
+
+### Table-driven predictive parsing
+
+**Model of a table-driven predictive parser**
+
+![table-driven-predictive-parser](../assets/images/syntax-analysis/top-down-parsing/table-driven-predictive-parser.png)
+
+> Image credit to Compilers: Principles, Techniques, and Tools 2nd Edition
+
+- Input: A string $w$ and a [parsing table](#construction-of-a-predictive-parsing-table) $M$ for grammar $G$.
+- Output: A leftmost derivation of $w$ or an error indication.
+
+Initially, the parser is in a configuration with $w\$$ in the input buffer and the start symbol $S$ of $G$ on top of the stack, above $\$$.
+
+- Set the input pointer $ip$ to point to the first symbol of $w$
+- Set $X$ to the top stack symbol and while $X \neq \$$ do the following
+
+1. If $X$ is $a$, pop the stack and advance $ip$.
+    - Else if $X$ is a terminal or $M \lbrack X, a \rbrack$ is an error entry ,error out.
+    - Else if $M \lbrack X ,a \rbrack = X \rightarrow Y_1Y_2 \cdots Y_k$
+        1. Output the production $X \rightarrow Y_1Y_2 \cdots Y_k$
+        1. Pop the stack
+        1. Push $Y_k, Y_{k-1}, \cdots , Y_1$ onto the stack, with $Y_1$ on top
+1. Set $X$ to the top stack symbol.
+
+#### Example
+Continue from above
+
+|      | $\bold{id}$               | $+$                       | $*$                   | $\lparen$                         | $\rparen$                 | $\$$                      |
+|------|---------------------------|---------------------------|-----------------------|-----------------------------------|---------------------------|---------------------------|
+| $E$  | $E \rightarrow TE'$       |                           |                       | $E \rightarrow TE'$               |                           |                           |
+| $E'$ |                           | $E' \rightarrow +TE'$     |                       |                                   | $E' \rightarrow \epsilon$ | $E' \rightarrow \epsilon$ |
+| $T$  | $T \rightarrow FT'$       |                           |                       | $T \rightarrow FT'$               |                           |                           |
+| $T'$ |                           | $T' \rightarrow \epsilon$ | $T' \rightarrow *FT'$ |                                   | $T' \rightarrow \epsilon$ | $T' \rightarrow \epsilon$ |
+| $F$  | $F \rightarrow \bold{id}$ |                           |                       | $F \rightarrow \lparen E \rparen$ |                           |                           |
+
+**Moves made by a predictive parser on input** $\bold{id} + \bold{id} * \bold{id}$
+
+|Matched|Input|Action|Stack|
+|-|-|-|-|
+||$\bold{id} + \bold{id} * \bold{id}\$$||$E\$$|
+||$\bold{id} + \bold{id} * \bold{id}\$$|output $E \rightarrow TE'$|$TE'\$$|
+||$\bold{id} + \bold{id} * \bold{id}\$$|output $T \rightarrow FT'$|$FT'E'\$$|
+||$\bold{id} + \bold{id} * \bold{id}\$$|output $F \rightarrow \bold{id}$|$\bold{id} T'E'\$$|
+|$\bold{id}$|$+ \bold{id} * \bold{id}\$$|match $\bold{id}$|$T'E'\$$|
+|$\bold{id}$|$+ \bold{id} * \bold{id}\$$|output $T' \rightarrow \epsilon$|$E'\$$|
+|$\bold{id}$|$+ \bold{id} * \bold{id}\$$|output $E' \rightarrow +TE'$|$+TE'\$$|
+|$\bold{id} +$|$\bold{id} * \bold{id}\$$|match $+$|$TE'\$$|
+|$\bold{id} +$|$\bold{id} * \bold{id}\$$|output $T \rightarrow FT'$|$FT'E'\$$|
+|$\bold{id} +$|$\bold{id} * \bold{id}\$$|output $F \rightarrow \bold{id}$|$\bold{id} T'E'\$$|
+|$\bold{id} + \bold{id}$|$* \bold{id}\$$|match $\bold{id}$|$T'E'\$$|
+|$\bold{id} + \bold{id}$|$* \bold{id}\$$|output $T' \rightarrow *FT'$|$\bold{id} *FT'E'\$$|
+|$\bold{id} + \bold{id} *$|$\bold{id}\$$|match $*$|$FT'E'\$$|
+|$\bold{id} + \bold{id} *$|$\bold{id}\$$|output $T' \rightarrow *FT'$|$FT'E'\$$|
+|$\bold{id} + \bold{id} *$|$\bold{id}\$$|output $F \rightarrow \bold{id}$|$\bold{id} T'E'\$$|
+|$\bold{id} + \bold{id} * \bold{id}$|$\$$|match $\bold{id}$|$T'E'\$$|
+|$\bold{id} + \bold{id} * \bold{id}$|$\$$|output $T' \rightarrow \epsilon$|$E'\$$|
+|$\bold{id} + \bold{id} * \bold{id}$|$\$$|output $E' \rightarrow \epsilon$|$\$$|
