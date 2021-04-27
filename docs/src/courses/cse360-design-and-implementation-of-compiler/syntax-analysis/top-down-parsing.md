@@ -354,8 +354,12 @@ Continue from above
 | $\bold{id} + \bold{id}$             | $* \bold{id}\$$                       | match $\bold{id}$                | $T'E'\$$             |
 | $\bold{id} + \bold{id}$             | $* \bold{id}\$$                       | output $T' \rightarrow *FT'$     | $\bold{id} *FT'E'\$$ |
 | $\bold{id} + \bold{id} *$           | $\bold{id}\$$                         | match $*$                        | $FT'E'\$$            |
-| $\bold{id} + \bold{id} *$           | $\bold{id}\$$                         | output $T' \rightarrow *FT'$     | $FT'E'\$$            |
 | $\bold{id} + \bold{id} *$           | $\bold{id}\$$                         | output $F \rightarrow \bold{id}$ | $\bold{id} T'E'\$$   |
 | $\bold{id} + \bold{id} * \bold{id}$ | $\$$                                  | match $\bold{id}$                | $T'E'\$$             |
 | $\bold{id} + \bold{id} * \bold{id}$ | $\$$                                  | output $T' \rightarrow \epsilon$ | $E'\$$               |
 | $\bold{id} + \bold{id} * \bold{id}$ | $\$$                                  | output $E' \rightarrow \epsilon$ | $\$$                 |
+
+
+![predictive-parsing](../assets/graphs/syntax-analysis/top-down-parsing/svg/predictive-parsing.svg)
+
+
