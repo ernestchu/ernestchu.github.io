@@ -47,8 +47,8 @@ To compute $FIRST(X)$ for all grammar symbol $X$, apply the following rules unti
 
 ::: tip Elaboration on the Rules
 
-1. For example, suppose $A \rightarrow \alpha \; \vert \; \lparen B \rparen$, then $FIRST(A) = \{ \alpha , \lparen \}$, where $\alpha$ and $\lparen$ are terminals
-1. For example, everythin in $FIRST(Y_1)$ is surely in $FIRST(X)$. If $Y_1$ does not derive $\epsilon$, then we add nothing more to $FIRST(X)$, but if $Y_1 \xRightarrow{*} \epsilon$, then we add $FIRST(Y_2)$, and so on.
+1. For example, suppose $A \rightarrow a \; \vert \; \lparen B \rparen$, then $FIRST(A) = \{ a , \lparen \}$, where $a$ and $\lparen$ are terminals
+1. For example, everything in $FIRST(Y_1)$ is surely in $FIRST(X)$. If $Y_1$ does not derive $\epsilon$, then we add nothing more to $FIRST(X)$, but if $Y_1 \xRightarrow{*} \epsilon$, then we add $FIRST(Y_2)$, and so on.
 1. The rule should be self-explanatory.
 
 :::
@@ -65,7 +65,7 @@ F  & \rightarrow & \lparen E \rparen \; \vert \; \bold{id} \\
 \end{matrix}$$
 
 Find the FIRST sets for the nonterminals
-::: tip Solutoin
+::: tip Solution
 ```
 FIRST(F) = {(}
 FIRST(F) = {(, id}
@@ -73,8 +73,8 @@ FIRST(F) = {(, id}
 FIRST(E') = {+}
 FIRST(E') = {+, ε}
 
-FIRST(T') = {+}
-FIRST(T') = {+, ε}
+FIRST(T') = {*}
+FIRST(T') = {*, ε}
 
 FIRST(T) = FIRST(F) = {(, id}
 FIRST(E) = FIRST(T) = {(, id}
@@ -110,7 +110,7 @@ In this case, $FOLLOW \lparen B \rparen = \{b\}$ and the current input (after sc
 ### Rules for FOLLOW set
 To compute $FOLLOW(A)$ for all nonterminals $A$, apply the following rules until nothing can be added to any FOLLOW set.
 
-1. Place $\$$ in $FOLLOW(S)$, where $S$ is the start symbol, and $\$$ is the input right endmarker.
+1. Place $\$$ in $FOLLOW(S)$, where $S$ is the start symbol and $\$$ is the input right endmarker.
 1. If there is a production $A \rightarrow \alpha B \beta$, then everything in $FIRST(\beta)$ except $\epsilon$ is in $FOLLOW(B)$.
 1. If there is a production $A \rightarrow \alpha B$, or a production $A \rightarrow \alpha B \beta$, where $FIRST(\beta)$ contains $\epsilon$, then everything in $FOLLOW(A)$ is in $FOLLOW(B)$.
 
