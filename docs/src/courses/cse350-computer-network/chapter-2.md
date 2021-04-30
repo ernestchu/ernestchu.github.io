@@ -200,8 +200,63 @@ Typically, e-mail, SSH, the Web, and file transfer all use TCP. These applicatio
 
 ## The Web and HTTP
 ### Overview of HTTP
-The **HyperText Transfer Protocol (HTTP), the Web's application-layer protocol, is at the heart of the Web. It's implemented in two programs: a client program and a server program. HTTP defines the structure of these messages and how the client and server exchange the messages.
+The **HyperText** Transfer Protocol (HTTP), the Web's application-layer protocol, is at the heart of the Web. It's implemented in two programs: a client program and a server program. HTTP defines the structure of these messages and how the client and server exchange the messages.
 
+A Web page consists of objects. An object is simply a file, typically **HTML** file, a JPEG image or a JavaScript. Each object is addressable by a **URL**, e.g.
+```
+http://www.hsnl.cse.nsysu.edu.tw/wklai/index.html
+|______________________________| |______________|
+    └──> host name                   └──> path name
+```
+The host name can be resolved into an IP address for a server, while the path name typically reflects the actually file structure on that server. The file name `index.html` is for a special file which can be addressed by the directory containing it. For example, `http://www.hsnl.cse.nsysu.edu.tw/wklai/` directs to the same page as above.
+
+#### HTTP client and server
+
+**Client**
+
+HTTP clients typically are browsers that request, receive, and display Web object (rendering HTML DOM). When you enter an URL on a browser
+
+1. It tries to make a connection with the host (referring to the host name above). 
+1. When a connection is established, it makes a HTTP request (typically GET) to get the file (referring to the path name above). 
+1. If it is an HTML file, then the browser render out the HTML DOMs (as everything you've on this webpage)
+
+
+We can also **not** use a browser to request a webpage. Try this
+
+```sh
+echo "GET /wklai/" | nc www.hsnl.cse.nsysu.edu.tw 80 | less
+```
+
+However, no one help us render the HTML file, so we'll see raw HTML texts. The command above makes a connection with the Lai's website using `nc`, then send a request to get the object.
+
+**Server**
+
+Web server host Web objects which typically are 
+
+1. HTML files
+1. CSS style sheets
+1. JavaScript (This can generate an entire web application nowadays. Vue.js, React)
+1. PHP files (server-side render)
+1. Multimedia
+
+A server need to handle concurrency since it should serve multiple clients concurrently. Three software are mainly used in the Web servers.
+
+1. Nginx
+1. Apache
+1. Microsoft IIS
+
+These software aim to deal with large amount of connections, memory usage reduction, speed and so on. Another important job for them is serving as **reverse proxies**, which basically provide a single server entry for the clients but distribute different jobs to servers/computer inside the company networks hidden from the clients.
+
+An application server is also frequently used in the modern websites. It can be written in 
+
+1. PHP/Laravel
+1. Java/Spring
+1. Node.js/Express
+1. Python/Django
+
+This kind of servers provide business logics, Database interactions, UI independent tasks for the dynamic web contents. For example, a forum website hosts lots of issues from the users. These issues are presented in the same UI structure but the contents are different. Therefore, a HTML template can be used across the forum and an application server is responsible to provide the content **dynamically**.
+
+The application servers can also handle concurrency but the **Web server** typically has done it by properly distributing the requests to them.
 
 
 <!--
