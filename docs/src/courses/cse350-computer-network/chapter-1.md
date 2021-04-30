@@ -12,7 +12,7 @@ They are made up of different types of physical media, including
 - Optical fiber
 - Radio spectrum
 
-Different links have different **transmission rate** (bits/second). The sending end system will segment the data into **packets** with additional header info. They're then sent through the network to the destination end system, where they are resembled into the original data.
+Different links have different **transmission rate** (bits/second). The sending end system will segment the data into **packets** with additional header info. They're then sent through the network to the destination end system, where they are reassembled into the original data.
 
 #### Packet switch
 Two main type

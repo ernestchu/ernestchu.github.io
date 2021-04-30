@@ -218,7 +218,7 @@ HTTP clients typically are browsers that request, receive, and display Web objec
 
 1. It tries to make a connection with the host (referring to the host name above). 
 1. When a connection is established, it makes a HTTP request (typically GET) to get the file (referring to the path name above). 
-1. If it is an HTML file, then the browser render out the HTML DOMs (as everything you've on this webpage)
+1. If it is an HTML file, then the browser render out the HTML DOM (as everything you've on this webpage)
 
 
 We can also **not** use a browser to request a webpage. Try this
@@ -227,7 +227,7 @@ We can also **not** use a browser to request a webpage. Try this
 echo "GET /wklai/" | nc www.hsnl.cse.nsysu.edu.tw 80 | less
 ```
 
-However, no one help us render the HTML file, so we'll see raw HTML texts. The command above makes a connection with the Lai's website using `nc`, then send a request to get the object.
+However, no one help us render the HTML file, so we'll see raw HTML texts. The command above makes a connection with Lai's website using `nc`, then send a request to get the object.
 
 **Server**
 
@@ -247,21 +247,51 @@ A server need to handle concurrency since it should serve multiple clients concu
 
 These software aim to deal with large amount of connections, memory usage reduction, speed and so on. Another important job for them is serving as **reverse proxies**, which basically provide a single server entry for the clients but distribute different jobs to servers/computer inside the company networks hidden from the clients.
 
-An application server is also frequently used in the modern websites. It can be written in 
+**An application server** is also frequently used in the modern websites. It can be written in 
 
 1. PHP/Laravel
 1. Java/Spring
 1. Node.js/Express
 1. Python/Django
 
-This kind of servers provide business logics, Database interactions, UI independent tasks for the dynamic web contents. For example, a forum website hosts lots of issues from the users. These issues are presented in the same UI structure but the contents are different. Therefore, a HTML template can be used across the forum and an application server is responsible to provide the content **dynamically**.
+This kind of servers provide business logics, Database interactions, UI independent tasks for the dynamic web contents. For example, a forum website hosts lots of issues from the users. These issues are presented in the same UI structure but the contents are different. Therefore, a HTML template can be used across the forum and an application server is responsible for providing the content **dynamically**.
 
 The application servers can also handle concurrency but the **Web server** typically has done it by properly distributing the requests to them.
+
+### Non-Persistent and Persistent Connections
+HTTP is said to be a **stateless protocol**, by which it doesn't memorize anything happened in the past. If you've logged in on a website, closed it, and reopen it, you may find you still logged in. That's the Web server caching/maintaining the state of your activities, but has nothing to do with the HTTP.
+
+Since the HTTP is stateless, it cannot recover the data if it's lost or arrives out-of-order during transmission. Consequently, it uses TCP (not UDP) as its underlying protocol to handle the recovery for it. HTTP also rely on the TCP connection, on which it can be classified into two types, non-persistent connections and persistent connections.
+
+#### HTTP with non-persistent connections
+In non-persistent connection, each request/response pair is sent over a **separate** TCP connection. That's to said, after the client received the requested objects, the connection is terminated.
+
+When we enter the URL `http://www.hsnl.cse.nsysu.edu.tw/wklai/index.html` into the browser, here is what happens:
+
+1. The HTTP client initiates a TCP connection to the server `http://www.hsnl.cse.nsysu.edu.tw/wklai/index.html` on port number 80 (default port for HTTP).
+1. The client sends an HTTP request message `GET /wklai/index.html` to the server.
+1. The server retrieves the requested object from its storage, encapsulates the object in an HTTP response message.
+1. The server tells TCP to close the connection. (But TCP doesn't actually terminate the connection until it knows that the client has received the response message intact.)
+1. The client receives the response message (guaranteed by TCP), extracts the HTML file and finds references to the other objects.
+1. The first four steps are then repeated for each of the images, CSS style sheets, etc. referenced in the HTML file.
+1. Finally ,the browser renders out the HTML DOM then apply the CSS style sheet.
+
+In the steps described above, we intentionally vague about how the client obtains the images and style sheets from separated connections.
+
+Let's estimate the amount of time it need to request an HTML file and its assets. We defined **round-trip time (RTT)** as the time it takes for a small packet to travel form client to server and then back to the client. The RTT includes processing, queuing, transmission and propagation delay discussed in [chapter 1](./chapter-1.html#types-of-delay). Since TCP enforces [Three-way handshaking](/courses/cse491-network-application-programming/chapter-2.md#connection-management), it requires **2 RTT** for a client to get the HTML file (3 transmission for connection, 1 for data transmission) for non-persistent connection *(the request message is included in the third transmission in 3-way handshaking)*. And **2 RTT** for every other objects following due to the separate connections.
+
+#### HTTP with persistent connections
+
+To overcome the waste of time on the connection establishment. HTTP 1.1 presents the persistent connections. In which the server leaves the TCP connection open after sending a response. Subsequent requests and responses between the same client and server can be sent over the same connection. In particular, an entire Web page (in the example above, the base HTML file and the assets) can be sent over a single persistent TCP connection. Only the first request to the object takes **2 RTT** to establish connection and transmit data, rest of the requests take **1 RTT** with the persistent connection.
+
+![figure-2-4](./assets/images/chapter-2/figure-2-4.jpeg)
+
+> Image credit to Computer Networking: A Top-down Approach, 7th Edition
+
 
 
 <!--
 
-### Non-Persistent and Persistent Connections
 ### HTTP Message Format
 ### User-Server Iteration: Cookies
 ### Web Caching
