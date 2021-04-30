@@ -1,15 +1,18 @@
 # Computer Networks and the Internet
+
+[[toc]]
+
 ## What Is the Internet?
 ### A Nuts-and-Bolts Description
 #### Communication links
-They are made up of differenet types of physical media, including
+They are made up of different types of physical media, including
 
 - Coaxial cable
 - Copper wire
 - Optical fiber
 - Radio spectrum
 
-Different links have different **transmission rate** (bits/second). The sending end system will segment the data into **packets** with additional header info. They're then sent through the network to the destination end system, where they are ressembled into the original data.
+Different links have different **transmission rate** (bits/second). The sending end system will segment the data into **packets** with additional header info. They're then sent through the network to the destination end system, where they are resembled into the original data.
 
 #### Packet switch
 Two main type
@@ -22,7 +25,7 @@ Link-layer switches are typically used in access networks, while routers are typ
 The sequence of communication links and packet switch from the sending end to the receiving end is known as **route** or **path** through the network.
 
 ##### A transportation analogy
-Consider a factory that move a large amount of cargo to some destination warehouse located thousands of kilometers away. At the factory, the cargo is distributed to many trucks. Each of the trucks independently travels trough the network of highways, roads and intersections. At the deestination warehouse, all of the cargo from the same shipment are gathered.
+Consider a factory that move a large amount of cargo to some destination warehouse located thousands of kilometers away. At the factory, the cargo is distributed to many trucks. Each of the trucks independently travels trough the network of highways, roads and intersections. At the destination warehouse, all of the cargo from the same shipment are gathered.
 
 | Network            | Transportation   |
 |--------------------|------------------|
@@ -42,9 +45,9 @@ or mobile wireless access.
 - Terrestrial radio channel
 - Satellite radio channel
 
-ISPs also provide Internet acess to content providers such as **Google**, connecting Web sites and video servers directly to the Internet.
+ISPs also provide Internet access to content providers such as **Google**, connecting Web sites and video servers directly to the Internet.
 
-The lower-tire ISPs are interconnected through national and inteernational upper-tier ISPs.
+The lower-tire ISPs are interconnected through national and international upper-tier ISPs.
 
 ![taiwan-isp](./assets/images/chapter-1/taiwan-isp.png)
 
@@ -63,7 +66,7 @@ Two of the most important protocols in the Internet.
 Together, they're known as **TCP/IP**. Still, there are many other protocols including HTTP (for Web) and SMTP (for e-mail).
 
 ### A Services Description
-Let's say you have an idea for a **distributed Internet application**. What does that mean? Any program that needs the ability to communicate with other end systems through the network. But how can your Java, C or Python program instruct the Interneet to deliver data?
+Let's say you have an idea for a **distributed Internet application**. What does that mean? Any program that needs the ability to communicate with other end systems through the network. But how can your Java, C or Python program instruct the Internet to deliver data?
 
 End systems attached to the Internet provide a **socket interface** that specifies how a program running on one end system asks the Internet infrastructure to deliver data to a specific destination. Feel difficult to relate? Take postal service for example, Alice want to send a mail to Bob but she cannot just write the content and throw it out of her window. Instead, the postal service requires that Alice put the letter in an envelope; write Bob's full name, address, and zip code in the center of the envelop; seal the envelop; put a stamp in the upper-right-hand corner of the envelop; and finally, drop the envelop into an official postal service mailbox. All these tedious procedures are required as the "postal service interface", or set of rules. Similarly, the Internet has a socket interface that programs need to follow.
 
@@ -77,14 +80,14 @@ The other analogy, assume we are in a class, the lecturer stops to ask, “Are t
 ##### Hardware-implemented protocols
 Two physically connected computers control the flow of bits on the **wire** between the two **network interface cards**.
 ###### Congestion-control protocols
-Control the rate at which packets aree transmitted between sender and receiver.
+Control the rate at which packets are transmitted between sender and receiver.
 ###### Router protocols
 Determine a packet's path from source to destination.
 ##### Request a Web page
 
 1. Your computer send a connection request message to the Web server and wait for a replay.
-1. The Web server reveice your request and return a connection reply message.
-1. Knowing that it's okay to request the Web document by the reply message, your comupter proceeds to send the name of the Web page it wants to fetch in a **GET** message.
+1. The Web server receive your request and return a connection reply message.
+1. Knowing that it's okay to request the Web document by the reply message, your computer proceeds to send the name of the Web page it wants to fetch in a **GET** message.
 1. The Web server returns the Web page (file) to your computer.
 
 > *A **protocol** defines the format and the order of messages exchanged between two or more communicating entities, as well as the actions taken on the transmission and/or receipt of a message or other event.*
@@ -98,7 +101,7 @@ Determine a packet's path from source to destination.
 ##### Client
 
 - Desktop
-- Smarphones
+- Smartphones
 - IoT
 
 ##### Server
@@ -135,12 +138,12 @@ Cable internet access makes use of the cable television company's existing cable
 
 > Image credit to Computer Networking: A Top-down Approach, 7th Edition
 
-One important characteristic of cable Internet access is that it is a shared broadcast medium. Every downstreamed-packet travels on every link to every home. Therefore, if several users are simultaneously downloading a video file on the downstream channel, the individual downstream rate will be significantly lower than the aggregate one. Also, because the upstream channel is also shared, a distrubuted multiple access protocol is needed to coordinate transmissions and avoid collision.
+One important characteristic of cable Internet access is that it is a shared broadcast medium. Every down-streamed-packet travels on every link to every home. Therefore, if several users are simultaneously downloading a video file on the downstream channel, the individual downstream rate will be significantly lower than the aggregate one. Also, because the upstream channel is also shared, a distributed multiple access protocol is needed to coordinate transmissions and avoid collision.
 
 #### FTTH
 Provide an optical fiber path from the CO directly to the home. Each fiber leaving the CO is shared by many homes. When the fiber get relatively close to the homes, it's split into individual customer-specific fibers.
 ##### Passive optical networks (PONs)
-Each home has an optical network terminator (ONT), which is connected by dedicated optical fiber to a neighborhood splitter. And the splitter connected an optical line terminator (OLT) in the CO via a single, shared optical fiber. In contrast to active optical networls (AONs), in the PONs architecture, all the packets sent from OLT to the splitter are reeplicated at the splitter then send to each home (similar to a cable head end).
+Each home has an optical network terminator (ONT), which is connected by dedicated optical fiber to a neighborhood splitter. And the splitter connected an optical line terminator (OLT) in the CO via a single, shared optical fiber. In contrast to active optical networls (AONs), in the PONs architecture, all the packets sent from OLT to the splitter are replicated at the splitter then send to each home (similar to a cable head end).
 
 ![figure-1-7](./assets/images/chapter-1/figure-1-7.png)
 
@@ -198,7 +201,7 @@ With guided media, the waves are guided along a solid medium, such as the follow
 
 ##### Coaxial cable
 
-- Like twisted pair, coaxial cable consists of two copper conductors, but the two con- ductors are concentric rather than parallel
+- Like twisted pair, coaxial cable consists of two copper conductors, but the two conductors are concentric rather than parallel
 - Quite common in cable television systems
 - Guided shared medium, a number of end systems can be connected directly to the cable
 
@@ -233,7 +236,7 @@ With unguided media, the waves propagate in the atmosphere and in outer space, s
 
 ##### Satellite radio channels
 ###### Geostationary satellite
-Geostationary statellite permanently remain above the same spot on Earth. This is achieved by placing the satellite in orbit at the altitude of 36,000 kilometers. Significant latency of around 280 milliseconds.
+Geostationary satellite permanently remain above the same spot on Earth. This is achieved by placing the satellite in orbit at the altitude of 36,000 kilometers. Significant latency of around 280 milliseconds.
 
 ###### Low-earth orbiting (LEO) satellite
 [Starlink](https://www.starlink.com) from SpaceX achieves downstream rates from 50Mb/s to 150Mb/s and latency from 20ms to 40ms by LEO. And it is still in progress.
@@ -245,7 +248,7 @@ Geostationary statellite permanently remain above the same spot on Earth. This i
 ### Packet Switching
 To send a message from a source end system to a destination end system, the source breaks long messages into smaller chunks of data known as **packets**. Each packets travels trough **communication link** and **packet switches** (**routers** and **link-layer switches**).
 
-If a source is sending a packet of $L$ bits over a link with trasmission rate $R$ bits/sec, then the transmission time is $L/R$ seconds. This is not the time it takes for the bits to travel across the wire, which refers to **propagation delay**. Instead, this is caused by the store-and-forward mechanism.
+If a source is sending a packet of $L$ bits over a link with transmission rate $R$ bits/sec, then the transmission time is $L/R$ seconds. This is not the time it takes for the bits to travel across the wire, which refers to **propagation delay**. Instead, this is caused by the store-and-forward mechanism.
 
 #### Store-and-forward transmission
 Store-and-forward transmission means that the packet switch must receive the entire packet before it can begin to transmit the first bit of the packet onto the outbound link. Which means not until the last bit arrives the packet switch, the other bits are stored in the router and wait for it before they proceed to be transmitted to the next router.
@@ -258,17 +261,18 @@ Store-and-forward transmission means that the packet switch must receive the ent
 $L$ is the packet length, $R$ is the transmission rate and the propagation delay is ignored.
 
 - At time $0$ the first bit of a packet arrives the current router.
-- At time $L/R$ the cuurent router receives the entire packet and begin to transmit it to the next router.
-- At time $2L/R$ the next router receives the entire packet and the transmission comlpete.
+- At time $L/R$ the current router receives the entire packet and begin to transmit it to the next router.
+- At time $2L/R$ the next router receives the entire packet and the transmission complete.
 
 So the total delay of this end-to-end transmission is $2L/R$
 
 ###### Generalize
 Assume there are $N$ links each of rate $R$ from source to destination, thus there are $N-1$ routers. We will have the end-to-end delay
-$$d_{end-to-end} = N{L\over R}$$
+
+$$d_{\text{end-to-end}} = N{L\over R}$$
 
 #### Queuing delays and packet loss
-Each packet switch has multiple links attacheed to it. For each link, the packet switch has an **output buffer**, a.k.a. **output queue**. If an arriving packet needs to be transmitted onto a link that is busy with another packet, the arriving packet must wait in the output buffer. Thus, in addition to the stor-and-forward delays, the **queuing delays** are introduced.
+Each packet switch has multiple links attached to it. For each link, the packet switch has an **output buffer**, a.k.a. **output queue**. If an arriving packet needs to be transmitted onto a link that is busy with another packet, the arriving packet must wait in the output buffer. Thus, in addition to the store-and-forward delays, the **queuing delays** are introduced.
 
 ![figure-1-12](./assets/images/chapter-1/figure-1-12.png)
 
@@ -280,7 +284,7 @@ Since the amount of buffer space is finite, an arriving packet may find that the
 In the Internet, every end system has an address called an IP address. When a source end system want to send a packet to a destination end system, the source includes the destination's IP address in the packet's header. This address has a hierarchical structure. When a packet arrives at a router in the network, the router examines a portion of the packet's destination address and forwards the packet to an adjacent router based on its **forwarding table**, which maps (portions of) destination addresses to that router's outbound links.
 
 ##### Analogy
-Suppose you're at National Sun Yat-sen University, a prestigious university in the southern Taiwan. You want to go to National Taiwan Univerity to find a friend. The full address of which is `No. 1, Sec 4, Roosevelt Rd., Taipei 10617, Taiwan`.
+Suppose you're at National Sun Yat-sen University, a prestigious university in the southern Taiwan. You want to go to National Taiwan University to find a friend. The full address of which is `No. 1, Sec 4, Roosevelt Rd., Taipei 10617, Taiwan`.
 
 1. You ask as your brother, he looks at the last portion of the address and suggests you to take the Taiwan high speed rail (THSR) to Taipei.
 1. After you get out off the train at Taipei station, you ask a station staff. After finding `Roosevelt Rd.` in the address, She advises you to take Taipei metro to Gongguan station.
@@ -289,16 +293,16 @@ Suppose you're at National Sun Yat-sen University, a prestigious university in t
 In the above analogy, your brother, the staff and the pedestrian are analogous to routers which extract a portion of the IP address and direct the packets to the next router/destination.
 
 ###### Routing protocols
-You might ask, how do forwarding tables get set? Are they hand-craftly configured like our national address system? Well, that's why we need **routing protocols**. They are used to automatically set the forwarding tables. A routing protocols may determine the shortest path from each router to each destination. This can be achieved by the famous Dijkstra algorithm that you might've learned in the algorithm class.
+You might ask, how do forwarding tables get set? Are they hand-crafted configured like our national address system? Well, that's why we need **routing protocols**. They are used to automatically set the forwarding tables. A routing protocols may determine the shortest path from each router to each destination. This can be achieved by the famous Dijkstra algorithm that you might've learned in the algorithm class.
 
 ### Circuit Switching
 In packet switch, those resources are **shared** so packets may have to wait for access to a communication link.
 
 In contrast to packet switch, the resources needed along a path to provide for communication between the end systems are **reserved** for the duration of the communication session in circuit switch .
 
-Traditional telephone networks are examples of circuit-switched networks. As long as the connection between the caller and the reciever is built, the network reserves a constant transmission rate in the network's links for the duration of the connection. Such connection is called **circuit**. The sender can transfer the data to the receiver at the guaranteed constant rate.
+Traditional telephone networks are examples of circuit-switched networks. As long as the connection between the caller and the receiver is built, the network reserves a constant transmission rate in the network's links for the duration of the connection. Such connection is called **circuit**. The sender can transfer the data to the receiver at the guaranteed constant rate.
 
-The figure below illustrates a circuit-switched network. Each of the links has four circuits, so that each link can support four simultaneeous connections. When two hosts want to communicate, the network establishes a dedicated end-to-end connection. Each router is responsible to ditribute the packets to the reserved circuit. Since the figure above has four circuits each link, a circuit gets one fourth of the link's total transmission capacity. For example, if each link has a transmission rate of 1Mbps, then each end-to-end connection gets 250 kbps of dedicated transmission rate.
+The figure below illustrates a circuit-switched network. Each of the links has four circuits, so that each link can support four simultaneous connections. When two hosts want to communicate, the network establishes a dedicated end-to-end connection. Each router is responsible to distribute the packets to the reserved circuit. Since the figure above has four circuits each link, a circuit gets one fourth of the link's total transmission capacity. For example, if each link has a transmission rate of 1Mbps, then each end-to-end connection gets 250 kbps of dedicated transmission rate.
 
 ![figure-1-13](./assets/images/chapter-1/figure-1-13.png)
 
@@ -316,7 +320,7 @@ For a TDM link, time is divided into frames of fixed duration, and each frame is
 > Image credit to Computer Networking: A Top-down Approach, 7th Edition
 
 ###### Exercise
-How long it takes to send a file of 640,000 bits from Host A to Host B over a circuit-switched network. Suppose all links in the network use TDM with 24 slots and have a bit rate of 1.546 Mbps. Also suppose it takes 500 msec to establish an end-to-end circuit beform the host can begin to transimit the file.
+How long it takes to send a file of 640,000 bits from Host A to Host B over a circuit-switched network. Suppose all links in the network use TDM with 24 slots and have a bit rate of 1.546 Mbps. Also suppose it takes 500 msec to establish an end-to-end circuit beform the host can begin to transmit the file.
 
 - Each circuit has a transmission rate of 1.536 Mbps / 24 = 64 kbps
 - It takes 640,000 bits / 64 kbps = 10s to transmit the file
@@ -351,30 +355,30 @@ Let's consider a second example. Suppose there are 10 users and one of them sudd
 
 **Circuit switching**
 
-- The user can only use his own portion of the transimission capacity while the others idle.
+- The user can only use his own portion of the transmission capacity while the others idle.
 - The transmission rate is therefore 1 Mbps / 10 = 0.1 Mbps.
 - It takes 1 Mb / 0.1 Mbps = 10s to transmit data.
 
 **Packet switching**
 
-- The user can continuously send its packets at the full link rate of 1 Mbps, since there are no other useers generating packets.
+- The user can continuously send its packets at the full link rate of 1 Mbps, since there are no other users generating packets.
 - It takes 1 Mb / 1 Mbps = 1s to transmit data.
 
 Although packet switching and circuit switching are both prevalent in today’s telecommunication networks, the trend has certainly been in the direction of packet switching. Even many of today’s circuit-switched telephone networks are slowly migrating toward packet switching. In particular, telephone networks often use packet switching for the expensive overseas portion of a telephone call.
 
 ### A Network of Networks
-Today’s Internet—a network of networks—is complex, consisting of a dozen or so tier-1 ISPs and hundreds of thousands of lower-tier ISPs. As we pay CHT's HiNet for Internet access, HiNet needs to pay the upper-tier ISP as well. A upper-tier ISP is call **provider** whilethe lower-tier ISP or end users are called **customer**. We as end user, connect with each other via our ISPs which are also interconnected via their ISP or directly.
+Today’s Internet—a network of networks—is complex, consisting of a dozen or so tier-1 ISPs and hundreds of thousands of lower-tier ISPs. As we pay CHT's HiNet for Internet access, HiNet needs to pay the upper-tier ISP as well. A upper-tier ISP is call **provider** while the lower-tier ISP or end users are called **customer**. We as end user, connect with each other via our ISPs which are also interconnected via their ISP or directly.
 
 #### Tier-1 ISPs
-Tier-1 ISPs don't have to pay anyone for connect with other Tier-1 ISPs. Since there're only a dozen of them in the world, they are interconnected directly. Except for the bottom level ISPs, points of presence (PoP) exists in all levels of the hierachy. A **PoP** is simply a group of routers in the provider's network where customer ISPs can connect into the provider ISP.
+Tier-1 ISPs don't have to pay anyone for connect with other Tier-1 ISPs. Since there're only a dozen of them in the world, they are interconnected directly. Except for the bottom level ISPs, points of presence (PoP) exists in all levels of the hierarchy. A **PoP** is simply a group of routers in the provider's network where customer ISPs can connect into the provider ISP.
 
 #### Multi-home
-Any ISP (except for tier-1 ISPs) may choose to multi-home. which means connecting to two or more provider ISPs so it can contiue to send and receive packets even if one of its providers has a failure.
+Any ISP (except for tier-1 ISPs) may choose to multi-home, which means connecting to two or more provider ISPs so it can continue to send and receive packets even if one of its providers has a failure.
 
 #### Peering, Internet exchange points (IXPs)
-To reduce the costs, two lower-tier nearby ISPs at the same level can peer instead of pay an upper-ter ISPs. When two ISPs peer, it is typically settlement-free, i.e., neither ISP pays the otheer. Tier-1 ISPs also peer with one another.
+To reduce the costs, two lower-tier nearby ISPs at the same level can peer instead of pay an upper-tier ISPs. When two ISPs peer, it is typically settlement-free, i.e., neither ISP pays the other. Tier-1 ISPs also peer with one another.
 
-Also, a third-party compant can create an IXP, which is a meeting point where multiple ISPs can peer together.
+Also, a third-party company can create an IXP, which is a meeting point where multiple ISPs can peer together.
 
 #### Content provider
 Google is by far the leading example of a content-provider network. The Google data centers are all interconnected via Google's private TCP/IP network, which spans the entire globe but is nevertheless separate from the public Internet. Google attempts to bypass the upper tiers by peering with lower-tier ISPs, either by directly connecting with them or by connecting with them at IXP.
@@ -408,7 +412,7 @@ The image below shows the current status of Google's connectivity in Taiwan. We 
 - The time of waiting to be transmitted onto the link
 - Depends on the number of packets already queued
 - No queuing delay of the queue is empty
-- On the order of microsecons to milliseconds
+- On the order of microseconds to milliseconds
 
 ##### Transmission delay
 
@@ -425,7 +429,7 @@ The image below shows the current status of Google's connectivity in Taiwan. We 
 - Denote the distant between two router by $d$, the propagation delay is $d/s$.
 - On the order of milliseconds
 
-#### Comparing transmisssion and propagation delay
+#### Comparing transmission and propagation delay
 The difference between transmission and propagation delay is usually difficult to understand at first.
 
 - The transmission delay is the amount of the time required for the router to push out the packet. It's a function of the **packet's length** and the **transmission rate** of the link
@@ -450,7 +454,8 @@ Suppose the cars are driven in the speed of 100 km/hour, the time required for a
 which is analogous to the propagation delay.
 
 In summary, the total nodal delay is given by
-$$d_{nodal} = d_{proc} + d_{queue} + d_{trans} + d_{prop}$$
+
+$$d_{\text{nodal}} = d_{\text{proc}} + d_{\text{queue}} + d_{\text{trans}} + d_{\text{prop}}$$
 
 ### Queuing Delay and Packet Loss
 
@@ -458,13 +463,13 @@ The most dominant delay in the packet-switched networks is nobody but the queuin
 
 - The **average** rate at which packets arrive is $a$ packets/sec
 - The transmission rate is $R$ bits/sec
-- The length of packes are all $L$ bits
+- The length of packets are all $L$ bits
 
 Then the average rate at which bits arrive at the queue is $La$ bits/sec. Also, assume the queue is very big, so that it can hold an infinite number of bits.
 
 The ratio $La/R$ is called the **traffic intensity**. If the traffic intensity is greater than 1, it means that the average rate exceeds the transmission rate. Therefore, the queue will tend to increase without bound, which results into the infinite queuing delay!
 
-On the other hand, you might think if ${La/R \leq 1}$, then the queue will always be empty, i.e., no queuing delay!. Unfortunately, that only happends in the case that the packets come with a contant time interval. Since we are talking about the **average** rate $a$, the packets is allowed, and in most cases, to arrive in **bursts**.
+On the other hand, you might think if ${La/R \leq 1}$, then the queue will always be empty, i.e., no queuing delay!. Unfortunately, that only happens in the case that the packets come with a constant time interval. Since we are talking about the **average** rate $a$, the packets is allowed, and in most cases, to arrive in **bursts**.
 
 For example, suppose $N$ packets arrive simultaneously every ${L\over R}N$ seconds, where a packet arrives every $L\over R$ seconds in average. The first packet has no queuing delay; the second packet has a queuing delay of $L\over R$ seconds; and the $n$th packet would has a queuing delay of ${(n-1)L}\over R$ seconds. Then ultimately leads to a significant average queuing delay!
 
@@ -483,7 +488,7 @@ In macOS, Traceroute is pre-install. You can run it in the built-in terminal
 ```sh
 traceroute [host name]
 ```
-For example, I want to see how many routers would it needs to connect with Prof. Lai's labortory, which is at `140.117.172.136`.
+For example, I want to see how many routers would it needs to connect with Prof. Lai's laboratory, which is at `140.117.172.136`.
 ```sh
 traceroute 140.117.172.136
 ```
@@ -503,7 +508,7 @@ And I get the output
 10  * * *
 11  140.117.172.136 (140.117.172.136)  5.824 ms  5.207 ms  9.291 ms
 ```
-We'll see, there are 8 routers between my computer and the labortory. Domestic Internet in Taiwan is typically served by ChungHwa Telecom's ISP, HiNet. We can see from hop 8, the packets enter the networks of NSYSU, which holds the IP address under `140.117`. And at hop 10, there're three asterisks. That's because Traceroute place the asterisk when the message is lost due to packet loss. At each router, Traceroute perform three experiments by sending three packets, that why in the last three column, there're three round-trip delays (end-to-end delay times two).
+We'll see, there are 8 routers between my computer and the laboratory. Domestic Internet in Taiwan is typically served by ChungHwa Telecom's ISP, HiNet. We can see from hop 8, the packets enter the networks of NSYSU, which holds the IP address under `140.117`. And at hop 10, there're three asterisks. That's because Traceroute place the asterisk when the message is lost due to packet loss. At each router, Traceroute perform three experiments by sending three packets, that why in the last three column, there're three round-trip delays (end-to-end delay times two).
 
 Let's connect to Google this time
 ```sh
@@ -524,9 +529,9 @@ traceroute google.com.tw
     tsa03s01-in-f227.1e100.net (216.58.200.227)  11.452 ms
     209.85.254.232 (209.85.254.232)  8.912 ms
 ```
-As we see, there're only 4 router in this path, which match what we've coverd earlier: Google as a content provider, creates its own networks and doesn't usually rely on the upper-tier ISPs.
+As we see, there're only 4 router in this path, which match what we've covered earlier: Google as a content provider, creates its own networks and doesn't usually rely on the upper-tier ISPs.
 
-Finally, we use the celluar Internet to give one last try and connect to the labortory again.
+Finally, we use the cellar Internet to give one last try and connect to the laboratory again.
 ```sh
  1  172.20.10.1 (172.20.10.1)  3.149 ms  1.520 ms  6.155 ms
  2  10.159.65.128 (10.159.65.128)  223.259 ms  235.398 ms  235.530 ms
@@ -549,10 +554,10 @@ Finally, we use the celluar Internet to give one last try and connect to the lab
 12  140.117.172.136 (140.117.172.136)  36.402 ms
     140.117.232.86 (140.117.232.86)  34.182 ms  30.947 ms
 ```
-Not surprisingly, at hop 2, the rount-trip delays are relatively high. That is because of the wireless cellular Internet. Also, we need to travel through more routers before entering the HiNet's backbone networks.
+Not surprisingly, at hop 2, the round-trip delays are relatively high. That is because of the wireless cellular Internet. Also, we need to travel through more routers before entering the HiNet's backbone networks.
 
 ### Throughput in Computer Networks
-In addition to delay and packet loss, another critical performance measure in computer networks is end-to-end throughtput. The **instantaneous throughtput** at any instant of time is the rate at which the destination is receiving the file, i.e., download speed. If the file consists of $F$ bits and the transfer takes $T$ seconds for the destination host to receive all $F$ bits, then the **average throughput** of the file transfer is $F/T$ bits/sec. Different applications require different throughput.
+In addition to delay and packet loss, another critical performance measure in computer networks is end-to-end throughput. The **instantaneous throughput** at any instant of time is the rate at which the destination is receiving the file, i.e., download speed. If the file consists of $F$ bits and the transfer takes $T$ seconds for the destination host to receive all $F$ bits, then the **average throughput** of the file transfer is $F/T$ bits/sec. Different applications require different throughput.
 
 - For Internet telephony, it's desirable to have a low delay and a throughput consistently above some threshold (over 24 kbps for audio, 256 kps for video)
 - For file transfer, delay is not critical, but it is desirable to have the highest possible throughput (so we don't have to spend a long time downloading it)
@@ -574,7 +579,7 @@ where that very decisive link is called the **bottleneck link**.
 
 > Image credit to Computer Networking: A Top-down Approach, 7th Edition
 
-Comparing the seven-layer model with the five-layer one, the presentationa and session layers are added. For the former, it's where the encrytion and the decryption take place; for the latter, it serves the functionality of sychronization of vedio and audio content.
+Comparing the seven-layer model with the five-layer one, the presentation and session layers are added. For the former, it's where the encryption and the decryption take place; for the latter, it serves the functionality of synchronization of video and audio content.
 
 #### Name of the packet in different layers
 
@@ -603,10 +608,10 @@ The application layer includes many protocols
 ##### UDP
 
 - Connectionless
-- No realiability, no flow control, no congestion control
+- No reliability, no flow control, no congestion control
 
 #### Network layer
-Just as you would give the postal service a letter with a destination address. TCP/UDP passes a transport-layer segment and a destination address the the network layer. The network layer then provides the service of delivering the segment to the transport layer in the destination host. Although the network layer contains both the IP protocol and numerous routing protocols, it is often simply referred to as the IP layer.
+Just as you would give the postal service a letter with a destination address. TCP/UDP passes a transport-layer segment and a destination address the network layer. The network layer then provides the service of delivering the segment to the transport layer in the destination host. Although the network layer contains both the IP protocol and numerous routing protocols, it is often simply referred to as the IP layer.
 
 #### Link layer
 The link layer route a datagram through a series of routers. At each node, the network layer passes the datagram down to the link layer, which delivers the datagram to the next node along the route. Examples of link-layer protocols include Ethernet and WiFi.
@@ -623,9 +628,9 @@ The job of the physical layer is to move the **individual bits** within the fram
 
 The above figure shows the physical path that data takes down a sending end system's protocol stack. Not all systems implement all the layers, take link-layer switches and routers for example, while the former implement layers 1 and 2, the latter implement layers 1 through 3. This means link-layers are lack of the ability to recognize IP address due to the absence of the network layer. Also, since nobody but the end systems have implemented the transport layer, it has no idea how the packets travel. It's crucial for the design of TCP and UDP.
 
-The figure also illustrates the concept of **encapsulation**. In every layer, the message is composed of two fields: **header field** and **payload field**. First, the header field may contains important information required by the receiver. And it's usually added by the current layer before passing **down**. Seconde, the payload field includes the data to be transfered and one or more headers from the **upper** layers. Each layer **encapsulates** the upper headers and the data into the payload field and adds it's own header. The header is analogous to the information on a envelop like address, sender's name, etc. The payload is analogous to the mail inside the envelop.
+The figure also illustrates the concept of **encapsulation**. In every layer, the message is composed of two fields: **header field** and **payload field**. First, the header field may contains important information required by the receiver. And it's usually added by the current layer before passing **down**. Second, the payload field includes the data to be transferred and one or more headers from the **upper** layers. Each layer **encapsulates** the upper headers and the data into the payload field and adds it's own header. The header is analogous to the information on a envelop like address, sender's name, etc. The payload is analogous to the mail inside the envelop.
 
-Just like mails, the receiver must fisrt check the envelop to ensure it's a mail for him. Yet unlike mails, the receiving layer doesn't read the contents on the mail sheet. Instead, it passes **up** the entire payload field to the upper layers and keeps the first header to itself.
+Just like mails, the receiver must first check the envelop to ensure it's a mail for him. Yet unlike mails, the receiving layer doesn't read the contents on the mail sheet. Instead, it passes **up** the entire payload field to the upper layers and keeps the first header to itself.
 
 
 ## Networks Under Attack
@@ -636,7 +641,7 @@ The goodness of thee Internet is nothing but the ability to provide unlimited am
 
 ### Thee bad guys can attack servers and network infrastructure
 #### Denial-of-service (DoS)
-The attacker sends a deluge of packets to the targeted host, so many pockets that the target's access link becomes colgged, preventing legitimate packets from reachin the server. Fortunately, this can be easily prevented by block the attackers IP address. However, in another case of **distributed Dos (DDoS)**, the attacker controls multiple sources and has each source blast traffic at the target, which can be achieved by the malware metioned above. This kind of attack is hard to defend because it's hard to identify which source is malicious and which is from a normal user.
+The attacker sends a deluge of packets to the targeted host, so many pockets that the target's access link becomes clogged, preventing legitimate packets from reaching the server. Fortunately, this can be easily prevented by block the attackers IP address. However, in another case of **distributed Dos (DDoS)**, the attacker controls multiple sources and has each source blast traffic at the target, which can be achieved by the malware mentioned above. This kind of attack is hard to defend because it's hard to identify which source is malicious and which is from a normal user.
 
 ![figure-1-25](./assets/images/chapter-1/figure-1-25.png)
 
