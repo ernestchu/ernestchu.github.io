@@ -224,7 +224,7 @@ HTTP clients typically are browsers that request, receive, and display Web objec
 We can also **not** use a browser to request a webpage. Try this
 
 ```sh
-echo "GET /wklai/" | nc www.hsnl.cse.nsysu.edu.tw 80 | less
+echo -n "GET /wklai/index.html HTTP/1.0\r\n\r\n" | nc www.hsnl.cse.nsysu.edu.tw 80 | less
 ```
 
 However, no one help us render the HTML file, so we'll see raw HTML texts. The command above makes a connection with Lai's website using `nc`, then send a request to get the object.
@@ -288,13 +288,149 @@ To overcome the waste of time on the connection establishment. HTTP 1.1 presents
 
 > Image credit to Computer Networking: A Top-down Approach, 7th Edition
 
+### HTTP Message Format
+#### HTTP request message
 
+We've seen the `GET` method above, let's look at a more complete example of an HTTP request message. Run
+
+```sh
+nc -l 1234
+```
+This start a server on your computer listening on port 1234. Then go to your browser and enter the URL `localhost:1234` to make an HTTP request. On your terminal, you should see the server received the request.
+
+```{1}
+GET / HTTP/1.1
+Host: localhost:1234
+Upgrade-Insecure-Requests: 1
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1 Safari/605.1.15
+Accept-Language: en-us
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+```
+The first line of an HTTP request message is called the **request line**; the subsequent lines are called the **header lines**
+
+The **request line** have three fields:
+
+1. The method field - `GET`, `POST`, `HEAD`, `PUT`, `DELETE`
+1. The URL field - requested object
+1. The HTTP version field - `HTTP/1.0`, `HTTP/1.1`
+
+For the **header lines**
+
+1. Host
+    - specifying the host on which the object resides. You might think that this is unnecessary, as there is already a TCP connection to the host. But, the information is required by Web proxy caches as we'll see later.
+1. User-agent
+    - specifying the browser sending request, it is useful because the server can send different versions of the same object depending on the user-agent.
+1. Accept-language
+    - This is how HTTP deliver the default version of language based on your language settings.
+1. Connection
+    - `close` tells the server that it doesn't want to bother with persistent connections; it wants the server to close the connection after sending the requested object.
+    - `keep-alive` tells the server that it wants a persistent connections
+
+![figure-2-5](./assets/images/chapter-2/figure-2-5.jpeg)
+**General format of an HTTP request message**
+
+> Image credit to Computer Networking: A Top-down Approach, 7th Edition
+
+`GET` **method**
+
+- Used by the browser to request objects
+- The entity body is empty
+- Can embed the inputted data in the URL when submitting forms
+    - For example, `www.somesite.com/animalsearch?monkeys&bananas` submits the form with two inputs.
+
+`POST` **method**
+
+- Used when the user fills out a form
+    - For example, when a user provides search words to a search engine.
+- The entity body contains the user inputs
+
+`HEAD` **method**
+
+- Used by developer for debugging
+- Just like `GET` but server responds with an HTTP message without the requested object
+
+`PUT` **method**
+
+- Used by the application that need to upload objects to Web servers.
+
+`DELETE` **method**
+
+- Allowing a user or an application to delete an object on a Web server
+
+#### HTTP response message
+```sh
+echo -n "GET /wklai/index.html HTTP/1.0\r\n\r\n" | nc www.hsnl.cse.nsysu.edu.tw 80 | less
+```
+Look at the first few lines
+```
+HTTP/1.1 200 OK
+Date: Sat, 01 May 2021 03:09:59 GMT
+Server: Apache/2.2.23 (Unix)
+Last-Modified: Tue, 26 Jan 2021 12:30:52 GMT
+ETag: "4a00cd-d7ba-5b9ccd33cd700"
+Accept-Ranges: bytes
+Content-Length: 55226
+Vary: Accept-Encoding
+Connection: close
+Content-Type: text/html
+
+(data data data data data ...)
+```
+Let’s take a careful look at this response message. It has three sections: 
+
+1. An initial **status line**
+1. Nine **header lines**
+1. The **entity body**
+
+The entity body is the meat of the message—it contains the requested object itself (represented by data data data data data ...).
+
+![figure-2-6](./assets/images/chapter-2/figure-2-6.jpeg)
+**General format of an HTTP response message**
+
+> Image credit to Computer Networking: A Top-down Approach, 7th Edition
+
+**Status line**
+
+Some common status codes and associated phrases include:
+
+- 200 OK
+    - Request succeeded and the information is returned in the response.
+- 301 Moved Permanently
+    - Requested object has been permanently moved; the new URL is specified in Location header of the response message. The client software will automatically retrieve the new URL.
+- 400 Bad Request
+    - This is a generic error code indicating that the request
+could not be understood by the server.
+- 404 Not Found
+    - The requested document does not exist on this server.
+- 505 HTTP Version Not Supported
+    - The requested HTTP protocol version is not supported by the server.
+
+**Header lines**
+
+- Date
+    - the time and date when the HTTP response was created, i.e., the time when the server retrieved the object from the file system.
+- Server
+    - Analogous to the **User-agent** in the request message header.
+- Last-Modified
+    - the time ad date when the object was created or last modified. It's critical for object caching as we'll see in the **proxy server** later
+- Content-Type
+    - The object type is officially indicated by the Content-Type instead of the file extension.
 
 <!--
 
-### HTTP Message Format
-### User-Server Iteration: Cookies
+### User-Server Interaction: Cookies
+Since HTTP is stateless, it's sometimes
+
+![figure-2-7](./assets/images/chapter-2/figure-2-7.jpeg)
+
+> Image credit to Computer Networking: A Top-down Approach, 7th Edition
+
+
+
 ### Web Caching
+
 
 ## Electronic Mail in the Internet
 ### SMTP
