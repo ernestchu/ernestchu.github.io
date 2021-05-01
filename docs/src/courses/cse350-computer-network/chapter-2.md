@@ -318,13 +318,13 @@ The **request line** have three fields:
 
 For the **header lines**
 
-1. Host
+1. `Host:`
     - specifying the host on which the object resides. You might think that this is unnecessary, as there is already a TCP connection to the host. But, the information is required by Web proxy caches as we'll see later.
-1. User-agent
+1. `User-agent:`
     - specifying the browser sending request, it is useful because the server can send different versions of the same object depending on the user-agent.
-1. Accept-language
+1. `Accept-language:`
     - This is how HTTP deliver the default version of language based on your language settings.
-1. Connection
+1. `Connection:`
     - `close` tells the server that it doesn't want to bother with persistent connections; it wants the server to close the connection after sending the requested object.
     - `keep-alive` tells the server that it wants a persistent connections
 
@@ -409,28 +409,86 @@ could not be understood by the server.
 
 **Header lines**
 
-- Date
+- `Date:`
     - the time and date when the HTTP response was created, i.e., the time when the server retrieved the object from the file system.
-- Server
+- `Server:`
     - Analogous to the **User-agent** in the request message header.
-- Last-Modified
+- `Last-Modified:`
     - the time ad date when the object was created or last modified. It's critical for object caching as we'll see in the **proxy server** later
-- Content-Type
+- `Content-Type:`
     - The object type is officially indicated by the Content-Type instead of the file extension.
 
-<!--
 
 ### User-Server Interaction: Cookies
-Since HTTP is stateless, it's sometimes
+We've said that HTTP is stateless, but sometimes, we want to identify users on a website. The server wishes to restrict user access or serve content as a function of the user identity. For these purposes, HTTP uses **cookies**. We use a example of visiting `www.amazon.com` to show how cookies work.
+
+When Susan use a browser to visit Amazon's website for the firs time
+
+1. When the request comes into the Amazon Web server, the server creates a unique identification number and creates an entry in its **back-end database** that is indexed by the identification number.
+1. The Amazon Web server then responds to Susan’s browser, including in the HTTP response a `Set-cookie:` header, which contains the identification number. 
+    - For example, the header line might be `Set-cookie: 1678`.
+1. When Susan’s browser receives the HTTP response message, it sees the `Set-cookie:` header. The browser then appends a line to the special cookie file that it manages.
+    - Even if there is already cookie for another host, say `www.ebay.com`, they don't interfere with each other
+1. As Susan continues to browse the Amazon site, each time she requests a Web page, her browser consults her cookie file, extracts her identification number for this site, and puts a cookie header line that includes the identification number in the HTTP request.
 
 ![figure-2-7](./assets/images/chapter-2/figure-2-7.jpeg)
 
 > Image credit to Computer Networking: A Top-down Approach, 7th Edition
 
-
+In this manner, the Amazon server can track Susan's activities at the Amazon site, remember what's left in the shopping cart last time. It can also remember the Susan's name, credit card number, etc. if she's made some purchase, and next time, she doesn't need to enter those information again.
 
 ### Web Caching
+A Web cache, also called a **proxy server**, is a network entity that satisfies HTTP requests on the behalf of an origin Web server, i.e., a mock server. The Web cache has its own disk storage and keeps copies of recently requested objects in this storage. If a browser is configured to use a proxy server, when sending requests
 
+1. The browser establishes a TCP connection to the Web cache and sends an HTTP request for the object to the Web cache.
+1.  The Web cache checks to see if it has a copy of the object stored locally. If it does, the Web cache returns the object within an HTTP response message to the client browser.
+1. If the Web cache does not have the object, the Web cache opens a TCP connection to the origin server,then sends an HTTP request for the object into the cache-to-server TCP connection. After receiving this request, the origin server sends the object within an HTTP response to the Web cache.
+    - If it have the object, the Web cache perform a [conditional `GET`](#the-conditional-get) and response to the browser if the object it has is up to date.
+1.  When the Web cache receives the object, it stores a copy in its local storage and sends a copy, within an HTTP response message, to the client browser (over the connection between the client browser and the Web cache).
+
+![figure-2-8](./assets/images/chapter-2/figure-2-8.jpeg) 
+
+> Image credit to Computer Networking: A Top-down Approach, 7th Edition
+
+#### Advantage
+
+1. The transmission rate doesn't have to be limited by the bottleneck on the link toward the public Internet
+1. Reduce the congestion in the Public Internet
+
+![figure-2-9](./assets/images/chapter-2/figure-2-9.jpeg) 
+
+> Image credit to Computer Networking: A Top-down Approach, 7th Edition
+
+However, if the object wasn't cached in the proxy server, the time it takes to receive the requested data would be even longer than directly requesting to the origin server. Consequently, the use of proxy server increase the overall transmission rate but producing high **variance**.
+
+|          | Cached | Non-cached |
+|----------|--------|------------|
+| Speed    | Fast   | Slow       |
+| Variance | High   | Low        |
+
+#### The conditional `GET`
+Remember we've said the `Last-Modified:` header is important to the proxy server. The conditional `GET` sent by the proxy server guarantees it always responses with the up-to-date objects. When the proxy server received a request, it forward the request with `If-modified-since:` header added. For example
+
+```
+GET /fruit/kiwi.gif HTTP/1.1
+Host: www.exotiquecuisine.com
+If-modified-since: Wed, 9 Sep 2015 09:23:24
+```
+The value of the `If-modified-since:` header line is exactly equal to the value of the `Last-Modified:` header line of the request to get the cached object in the past.
+
+This conditional `GET` is telling the server to send the object only if the object has been modified since the specified date. Suppose the object has not been modified since 9 Sep 2015 09:23:24. Then the Web server sends a response message to the proxy server
+```
+HTTP/1.1 304 Not Modified
+Date: Sat, 10 Oct 2015 15:39:29
+Server: Apache/1.3.0 (Unix) 
+(empty entity body)
+```
+- If the resource has not changed, the server sends back a `304 Not Modified response`. This makes the cache fresh again, and the client uses the cached resource. Although there is a response/request round-trip that consumes some resources, this is more efficient than to transmit the whole resource over the wire again.
+- If the resource has changed, the server just sends back a `200 OK response`, with the new version of the resource, like if the request wasn't conditional and the client uses this new resource (and caches it).
+
+See more details on [MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Conditional_requests)
+
+<!--
 
 ## Electronic Mail in the Internet
 ### SMTP
