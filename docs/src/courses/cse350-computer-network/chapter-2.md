@@ -205,8 +205,8 @@ The **HyperText** Transfer Protocol (HTTP), the Web's application-layer protocol
 A Web page consists of objects. An object is simply a file, typically **HTML** file, a JPEG image or a JavaScript. Each object is addressable by a **URL**, e.g.
 ```
 http://www.hsnl.cse.nsysu.edu.tw/wklai/index.html
-|______________________________| |______________|
-    └──> host name                   └──> path name
+|__|   |_______________________||_______________|
+ └──> protocol └──> host name       └──> path name
 ```
 The host name can be resolved into an IP address for a server, while the path name typically reflects the actually file structure on that server. The file name `index.html` is for a special file which can be addressed by the directory containing it. For example, `http://www.hsnl.cse.nsysu.edu.tw/wklai/` directs to the same page as above.
 
@@ -546,12 +546,74 @@ QUIT
 ![mail](./assets/images/chapter-2/mail.png)
 
 ::: danger Anyone Can Use Your Email Address
-Since the sender's address can be any valid email address, it is possible that someone who has your email address fakes your identity and sends emails from your address.
+Since the sender's address can be any valid email address, it is possible that someone who has your email address fakes your identity and sends emails from your address to an SMTP server.
 :::
 
 ### Comparison with HTTP
-### Mail Message Formats
+| HTTP                                                                            | SMTP                                                          |
+|---------------------------------------------------------------------------------|---------------------------------------------------------------|
+| Non-persistent or persistent                                                    | Persistent                                                    |
+| A pull protocol where the receiver initiates the TCP connection                 | A push protocol where the sender initiates the TCP connection |
+| No restriction                                                                  | 7-bit ASCII encoding                                          |
+| Treat multimedia (binaries) as objects and encapsulate them in the HTTP message | Encode multimedia (binaries) into ASCII                       |
+
 ### Mail Access Protocols
+The final missing piece to the puzzle, **user agents**! How can we retrieve the emails from the mail server? There are currently a number of popular mail access protocols
+
+1. Post Office Protocol Version 3 (POP3)
+1. Internet Mail Access Protocol (IMAP)
+1. HTTP
+
+#### POP3
+POP3 is an extremely simple mail access protocol. Because it's so simple, its functionality is rather limited. POP3 begins when the user agent (the client) opens a TCP connection to the mail server (the server) on port **110**. With the TCP connection established, POP3 progresses through three phases: 
+
+1. Authorization
+    - Enter the username and the password
+1. Transaction
+    - `list`, `retr`, and `dele`
+    - Server response `+OK` if the command is valid, otherwise `-ERR`
+1. Update
+    - Occur after the `quit` command, ending the POP3 session and deletes the messages that were marked for deletion by the `dele` command.
+
+```sh{1,3,5,7,12,27}
+% nc student.nsysu.edu.tw 110
++OK POP3 ready
+user b073040018
++OK
+pass ****
++OK server ready
+list
++OK 2 messages
+1 534
+2 560
+.
+retr 1
++OK message follows
+Return-Path: <nobody@blah.blahblah>
+Received: from stu02.nsysu.edu.tw (LHLO stu02.nsysu.edu.tw) (10.10.20.85) by
+ stu05.nsysu.edu.tw with LMTP; Sat, 1 May 2021 18:12:04 +0800 (CST)
+Received: from NotAHost (220-142-21-58.dynamic-ip.hinet.net [220.142.21.58])
+	by stu02.nsysu.edu.tw (Postfix) with SMTP id 1935812156C
+	for <b073040018@student.nsysu.edu.tw>; Sat,  1 May 2021 18:11:32 +0800 (CST)
+Message-Id: <20210501101146.1935812156C@stu02.nsysu.edu.tw>
+Date: Sat,  1 May 2021 18:11:32 +0800 (CST)
+From: nobody@blah.blahblah
+
+Who I am?
+Do I exist?
+.
+quit
++OK stu05.nsysu.edu.tw Zimbra POP3 server closing connection
+```
+
+#### IMAP
+An IMAP server will associate each message with a folder; when a message first arrives at the server, it is associated with the recipient’s INBOX folder. The recipient can then move the message into a new, user-created folder, read the message, delete the message, and so on. IMAP also provides commands that allow users to search remote folders for messages matching specific criteria.
+
+Another important feature of IMAP is that it has commands that permit a user agent to obtain components of messages. For example, a user agent can obtain just the message header of a message or just one part of a multipart MIME message. This feature is useful when there is a low-bandwidth connection or a long message that might contain, for example, an audio or video clip.
+
+
+#### Web-based e-mail
+More and more users today are sending and accessing their e-mail through their Web browsers. Hotmail introduced Web-based access in the mid 1990s. Now Web-based e-mail is also provided by Google, Yahoo!, as well as just about every major university and corporation. With this service, the user agent is an ordinary Web browser, and the user communicates with its remote mailbox via HTTP. When a recipient, such as Bob, wants to access a message in his mailbox, the e-mail message is sent from Bob’s mail server to Bob’s browser using the HTTP protocol rather than the POP3 or IMAP protocol.
 
 <!--
 
