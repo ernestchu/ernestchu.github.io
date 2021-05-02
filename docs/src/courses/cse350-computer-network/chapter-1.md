@@ -24,7 +24,9 @@ Link-layer switches are typically used in access networks, while routers are typ
 
 The sequence of communication links and packet switch from the sending end to the receiving end is known as **route** or **path** through the network.
 
-##### A transportation analogy
+
+**A transportation analogy**
+
 Consider a factory that move a large amount of cargo to some destination warehouse located thousands of kilometers away. At the factory, the cargo is distributed to many trucks. Each of the trucks independently travels trough the network of highways, roads and intersections. At the destination warehouse, all of the cargo from the same shipment are gathered.
 
 | Network            | Transportation   |
@@ -77,13 +79,21 @@ We humans execute protocols all of the time. When asking someone for the time of
 The other analogy, assume we are in a class, the lecturer stops to ask, “Are there any questions?“ You raise your hand and the lecturer kindly says “Yes...?“. Then you can finally ask a question. That's a kind of **Three-way handshaking**!
 
 #### Network protocols
-##### Hardware-implemented protocols
+
+**Hardware-implemented protocols**
+
 Two physically connected computers control the flow of bits on the **wire** between the two **network interface cards**.
-###### Congestion-control protocols
+
+**Congestion-control protocols**
+
 Control the rate at which packets are transmitted between sender and receiver.
-###### Router protocols
+
+**Router protocols**
+
 Determine a packet's path from source to destination.
-##### Request a Web page
+
+**Request a Web page**
+
 
 1. Your computer send a connection request message to the Web server and wait for a replay.
 1. The Web server receive your request and return a connection reply message.
@@ -98,13 +108,17 @@ Determine a packet's path from source to destination.
 
 ## The Network Edge
 **Edge**, a.k.a. **end systems**, also **host** can be divide into two categories.
-##### Client
+
+**Client**
+
 
 - Desktop
 - Smartphones
 - IoT
 
-##### Server
+
+**Server**
+
 
 - Super computer
 - Distribute Web pages
@@ -142,7 +156,9 @@ One important characteristic of cable Internet access is that it is a shared bro
 
 #### FTTH
 Provide an optical fiber path from the CO directly to the home. Each fiber leaving the CO is shared by many homes. When the fiber get relatively close to the homes, it's split into individual customer-specific fibers.
-##### Passive optical networks (PONs)
+
+**Passive optical networks (PONs)**
+
 Each home has an optical network terminator (ONT), which is connected by dedicated optical fiber to a neighborhood splitter. And the splitter connected an optical line terminator (OLT) in the CO via a single, shared optical fiber. In contrast to active optical networls (AONs), in the PONs architecture, all the packets sent from OLT to the splitter are replicated at the splitter then send to each home (similar to a cable head end).
 
 ![figure-1-7](./assets/images/chapter-1/figure-1-7.png)
@@ -151,9 +167,13 @@ Each home has an optical network terminator (ONT), which is connected by dedicat
 
 #### LAN, Ethernet and WiFi
 Local area network (LAN) is used to connect an end system to the edge router.
-##### Ethernet
+
+**Ethernet**
+
 As the most prevalent LAN technology, users use twisted-pair cooper wire to connect to an Ethernet switch.
-##### Wireless LAN (WiFi)
+
+**Wireless LAN (WiFi)**
+
 In a WiFi setting, wireless user transmit/receive packets to/from an access point (AP) that is connected into the LAN (most likely using wired Ethernet), which in turn is connected to the wired Internet.
 
 ```
@@ -189,7 +209,9 @@ Laptop, Smartphone, IoT
 ### Physical Media
 #### Guided media
 With guided media, the waves are guided along a solid medium, such as the following
-##### Twisted-pair copper wire
+
+**Twisted-pair copper wire**
+
 
 - Used by telephone networks for more than a hundred years
 - The least expensive and most commonly used medium
@@ -199,7 +221,9 @@ With guided media, the waves are guided along a solid medium, such as the follow
 
 > Image from Amazon
 
-##### Coaxial cable
+
+**Coaxial cable**
+
 
 - Like twisted pair, coaxial cable consists of two copper conductors, but the two conductors are concentric rather than parallel
 - Quite common in cable television systems
@@ -209,7 +233,9 @@ With guided media, the waves are guided along a solid medium, such as the follow
 
 > Image from Amazon
 
-##### Fiber optics
+
+**Fiber optics**
+
 
 - A single optical fiber can support tremendous bit rates, up to tens or even hundreds of gigabits per second
 - Immune to electromagnetic interference, have very low signal attenuation up to 100 kilometers, and are very hard to tap
@@ -221,8 +247,12 @@ With guided media, the waves are guided along a solid medium, such as the follow
 
 #### Unguided media
 With unguided media, the waves propagate in the atmosphere and in outer space, such as the following
-##### Terrestrial radio channels
-###### Spatial classification into three types
+
+**Terrestrial radio channels**
+
+
+**Spatial classification into three types**
+
 
 - Wireless personal area network (WPAN): wireless headsets, keyboards
 - Wireless LAN (WLAN): WiFi
@@ -234,11 +264,17 @@ With unguided media, the waves propagate in the atmosphere and in outer space, s
 
 > Image from Wikipedia
 
-##### Satellite radio channels
-###### Geostationary satellite
+
+**Satellite radio channels**
+
+
+**Geostationary satellite**
+
 Geostationary satellite permanently remain above the same spot on Earth. This is achieved by placing the satellite in orbit at the altitude of 36,000 kilometers. Significant latency of around 280 milliseconds.
 
-###### Low-earth orbiting (LEO) satellite
+
+**Low-earth orbiting (LEO) satellite**
+
 [Starlink](https://www.starlink.com) from SpaceX achieves downstream rates from 50Mb/s to 150Mb/s and latency from 20ms to 40ms by LEO. And it is still in progress.
 
 ![leo](./assets/images/chapter-1/leo.jpg)
@@ -257,16 +293,20 @@ Store-and-forward transmission means that the packet switch must receive the ent
 
 > Image credit to Computer Networking: A Top-down Approach, 7th Edition
 
-###### Example
-$L$ is the packet length, $R$ is the transmission rate and the propagation delay is ignored.
+
+**Example**
+
+$L$ is the packet length, $R$ is the transmission rate and the propagation delay is ignored. Assume there is only one router between the source and the destination
 
 - At time $0$ the first bit of a packet arrives the current router.
-- At time $L/R$ the current router receives the entire packet and begin to transmit it to the next router.
-- At time $2L/R$ the next router receives the entire packet and the transmission complete.
+- At time $L/R$ the current router receives the entire packet and begin to transmit it to the end system.
+- At time $2L/R$ the end system receives the entire packet and the transmission complete.
 
 So the total delay of this end-to-end transmission is $2L/R$
 
-###### Generalize
+
+**Generalize**
+
 Assume there are $N$ links each of rate $R$ from source to destination, thus there are $N-1$ routers. We will have the end-to-end delay
 
 $$d_{\text{end-to-end}} = N{L\over R}$$
@@ -283,7 +323,9 @@ Since the amount of buffer space is finite, an arriving packet may find that the
 #### Forward tables and routing protocols
 In the Internet, every end system has an address called an IP address. When a source end system want to send a packet to a destination end system, the source includes the destination's IP address in the packet's header. This address has a hierarchical structure. When a packet arrives at a router in the network, the router examines a portion of the packet's destination address and forwards the packet to an adjacent router based on its **forwarding table**, which maps (portions of) destination addresses to that router's outbound links.
 
-##### Analogy
+
+**Analogy**
+
 Suppose you're at National Sun Yat-sen University, a prestigious university in the southern Taiwan. You want to go to National Taiwan University to find a friend. The full address of which is `No. 1, Sec 4, Roosevelt Rd., Taipei 10617, Taiwan`.
 
 1. You ask as your brother, he looks at the last portion of the address and suggests you to take the Taiwan high speed rail (THSR) to Taipei.
@@ -292,7 +334,9 @@ Suppose you're at National Sun Yat-sen University, a prestigious university in t
 
 In the above analogy, your brother, the staff and the pedestrian are analogous to routers which extract a portion of the IP address and direct the packets to the next router/destination.
 
-###### Routing protocols
+
+**Routing protocols**
+
 You might ask, how do forwarding tables get set? Are they hand-crafted configured like our national address system? Well, that's why we need **routing protocols**. They are used to automatically set the forwarding tables. A routing protocols may determine the shortest path from each router to each destination. This can be achieved by the famous Dijkstra algorithm that you might've learned in the algorithm class.
 
 ### Circuit Switching
@@ -309,17 +353,23 @@ The figure below illustrates a circuit-switched network. Each of the links has f
 > Image credit to Computer Networking: A Top-down Approach, 7th Edition
 
 #### Multiplexing in circuit-switched networks
-##### Frequency-division multiplexing (FDM)
+
+**Frequency-division multiplexing (FDM)**
+
 With FDM, the frequency spectrum of a link is divided up among the connections established across the link. In telephone networks, this frequency band typically has a width of 4kHz. The width of the band is called the **bandwidth**. FM radio stations also use FDM to share the frequency spectrum between 88 MHz and 108 MHz, with each station being allocated a specific frequency band.
 
-##### Time-division multiplexing (TDM)
+
+**Time-division multiplexing (TDM)**
+
 For a TDM link, time is divided into frames of fixed duration, and each frame is divided into a fixed number of time slots. When the network establishes a connection across a link, the network dedicates one time slot in every frame to this connection. These slots are dedicated for the sole use of that connection, with one time slot available for use (in every frame) to transmit the connection’s data.
 
 ![figure-1-14](./assets/images/chapter-1/figure-1-14.png)
 
 > Image credit to Computer Networking: A Top-down Approach, 7th Edition
 
-###### Exercise
+
+**Exercise**
+
 How long it takes to send a file of 640,000 bits from Host A to Host B over a circuit-switched network. Suppose all links in the network use TDM with 24 slots and have a bit rate of 1.546 Mbps. Also suppose it takes 500 msec to establish an end-to-end circuit beform the host can begin to transmit the file.
 
 - Each circuit has a transmission rate of 1.536 Mbps / 24 = 64 kbps
@@ -336,7 +386,9 @@ Note that the transmission time is independent of the number of links.
 | Simple, efficient and cheap                | Complex signal design, costly |
 | Variable delays (due to the queuing delay) | Constant rates                |
 
-###### Exercise
+
+**Exercise**
+
 Suppose users share a 1 Mbps link and they either generate data at a constant rate of 100 kpbs or do nothing (idle). Suppose a user is active only 10 percent of the time.
 
 **Circuit switching**
@@ -370,7 +422,7 @@ Although packet switching and circuit switching are both prevalent in today’s 
 Today’s Internet—a network of networks—is complex, consisting of a dozen or so tier-1 ISPs and hundreds of thousands of lower-tier ISPs. As we pay CHT's HiNet for Internet access, HiNet needs to pay the upper-tier ISP as well. A upper-tier ISP is call **provider** while the lower-tier ISP or end users are called **customer**. We as end user, connect with each other via our ISPs which are also interconnected via their ISP or directly.
 
 #### Tier-1 ISPs
-Tier-1 ISPs don't have to pay anyone for connect with other Tier-1 ISPs. Since there're only a dozen of them in the world, they are interconnected directly. Except for the bottom level ISPs, points of presence (PoP) exists in all levels of the hierarchy. A **PoP** is simply a group of routers in the provider's network where customer ISPs can connect into the provider ISP.
+Tier-1 ISPs don't have to pay anyone for connect with other Tier-1 ISPs. Since there're only a dozen of them in the world, they are interconnected directly. Except for the bottom level ISPs (because they don't have customer ISPs), points of presence (PoP) exists in all levels of the hierarchy. A **PoP** is simply a group of routers in the **provider's network** where customer ISPs can connect into the provider ISP through these routers.
 
 #### Multi-home
 Any ISP (except for tier-1 ISPs) may choose to multi-home, which means connecting to two or more provider ISPs so it can continue to send and receive packets even if one of its providers has a failure.
@@ -402,26 +454,34 @@ The image below shows the current status of Google's connectivity in Taiwan. We 
 
 > Image credit to Computer Networking: A Top-down Approach, 7th Edition
 
-##### Nodal processing delay
+
+**Nodal processing delay**
+
 
 - The time required to examine the packet's header and determine where to direct the packet
 - Typically on the order of microseconds or less
 
-##### Queuing delay
+
+**Queuing delay**
+
 
 - The time of waiting to be transmitted onto the link
 - Depends on the number of packets already queued
 - No queuing delay of the queue is empty
 - On the order of microseconds to milliseconds
 
-##### Transmission delay
+
+**Transmission delay**
+
 
 - The time required to push all of the packet's bits into the link
 - If the length of the packet is $L$ bits, and the transmission rate of the link is $R$ bits/sec
 - The transmission delay is $L/R$
 - On the order of microseconds to milliseconds
 
-##### Propagation delay
+
+**Propagation delay**
+
 
 - The time required to propagate from the beginning of the link to destination router
 - Depends of the physical medium of the link (fiver optics, twisted-pair copper wire, etc)
@@ -435,7 +495,9 @@ The difference between transmission and propagation delay is usually difficult t
 - The transmission delay is the amount of the time required for the router to push out the packet. It's a function of the **packet's length** and the **transmission rate** of the link
 - The propagation delay is the time it takes a bit to propagate from one router to the next. It's a function of the distance between two routers and the physical medium of the link.
 
-##### A caravan analogy
+
+**A caravan analogy**
+
 
 ![figure-1-17](./assets/images/chapter-1/figure-1-17.png)
 
@@ -599,13 +661,17 @@ The application layer includes many protocols
 - FTP, for file transfer
 
 #### Transport layer
-##### TCP
+
+**TCP**
+
 
 - Connection-oriented
 - Guarantee delivery, flow control, congestion control
 - Break long message into shorter segments
 
-##### UDP
+
+**UDP**
+
 
 - Connectionless
 - No reliability, no flow control, no congestion control

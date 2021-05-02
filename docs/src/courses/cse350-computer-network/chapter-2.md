@@ -615,12 +615,86 @@ Another important feature of IMAP is that it has commands that permit a user age
 #### Web-based e-mail
 More and more users today are sending and accessing their e-mail through their Web browsers. Hotmail introduced Web-based access in the mid 1990s. Now Web-based e-mail is also provided by Google, Yahoo!, as well as just about every major university and corporation. With this service, the user agent is an ordinary Web browser, and the user communicates with its remote mailbox via HTTP. When a recipient, such as Bob, wants to access a message in his mailbox, the e-mail message is sent from Bob’s mail server to Bob’s browser using the HTTP protocol rather than the POP3 or IMAP protocol.
 
-<!--
-
 ## DNS–The Internet's Directory Service
 ### Services Provided by DNS
+
+We have just seen that there are two ways to identify a host—by a hostname and by an IP address. The Internet's **domain name system (DNS)** is a directory service that translates hostnames to IP addresses. The DNS protocol runs over UDP and uses **port 53**. DNS provides a few other important services in addition to translating hostnames to IP addresses:
+
+- Host aliasing
+    - A host with complicated host name can have one or more alias names. The complicated one is usually a **canonical hostname**. The other names are aliases and they tend to be more mnemonic for people to memorize them.
+- Mail server aliasing
+    - Same as above, take our school for example, the canonical name for the student mail server is `stu02.nsysu.edu.tw` and the alias name is `student.nsysu.edu.tw`
+- Load distribution
+    - Busy sites are typically replicated over multiple servers, with each server running on a different end system and each having a different IP address. A set of IP addresses is thus associated with one canonical hostname. The DNS database contains this set of IP addresses. It tries to give the client one of these IP address evenly in order to distribute the loading on each server.
+
 ### Overview of How DNS Works
+A simple design for DNS would have one DNS server that contains all the mappings. In this centralized design, clients simply direct all queries to the single DNS server, and the DNS server responds directly to the querying clients. Despite of the simplicity, the problems with a centralized design include
+
+- A single point of failure
+    - If the DNS server crashes, so does the entire Internet!
+- Traffic volume
+    - A single DNS server would have heavy loadings
+- Distant centralized database
+    - A single DNS server cannot be close to all the querying clients
+- Maintenance
+    - It have to be updated frequently to account for every new host
+
+#### A distributed, hierarchical database 
+
+![figure-2-11](./assets/images/chapter-2/figure-2-11.jpeg)
+
+> Image credit to Computer Networking: A Top-down Approach, 7th Edition
+
+- Root DNS servers
+    - There are over 400 root name servers scattered all over the world.
+    - Root name servers provide the IP addresses of the TLD servers.
+- Top-level domain (TLD) servers
+    - For the top-level domains such as com, org, net, edu, and gov
+    - For the country top-level domain such as uk, fr, ca, jp, and tw
+    - TLD servers provide the IP addresses for authoritative DNS servers.
+- Authoritative DNS servers
+    - Every organization with publicly accessible hosts on the Internet must provide publicly accessible DNS records that map the names of those hosts to IP addresses. An organization’s authoritative DNS server houses these DNS records. An organization can implement its own authoritative DNS server to hold these records
+    - Most universities and large companies implement and maintain their own primary and secondary (backup)
+authoritative DNS server.
+    - Take our school for example, `dns.nsysu.edu.tw` a.k.a `140.117.11.1` is an authoritative DNS server
+    - `dns2.nsysu.edu.tw` a.k.a `140.117.11.11` is a backup authoritative DNS server
+
+**Example**
+
+Suppose a host on `cse.nyu.edu` wants the IP address for `gaia.cs.umass.edu`. The local DNS server and the authoritative DNS server for them are `dns.nyu.edu.` and `dns.umass.edu` respectively.
+
+1. The host send a DNS query messages to its local DNS server, `dns.nyu.edu`.
+1. The local DNS server forwards the query message to a root DNS server.
+1. The root DNS server takes note of the `edu` suffix and returns a list of IP addresses for TLD servers responsible for `edu`.
+1. The local DNS server then resends the query message to on of these TLD servers.
+1. The TLD server takes note of the `umass.edu` suffix and responds with the IP address of the authoritative DNS server for the University of Massachusetts, `dns.unass.edu`.
+1. Finally, the local DNS server resends the query message directly to `dns.umass.edu`
+1. The authoritative server responds with the IP address of `gaia.cs.umass.edu`.
+1. The local DNS server then gives the IP address back to the host.
+
+The left hand side of the figure illustrate the procedures above. However, a fully recursive approach, as the rhs of the figure shows, also works. In practice, the queries typically follow the pattern in the lhs: The query from the requesting host to the local DNS server is recursive, and the remaining queries are iterative.
+
+
+![figure-2-12](./assets/images/chapter-2/figure-2-12.jpeg)
+
+> Image credit to Computer Networking: A Top-down Approach, 7th Edition
+
+Note that in this example, in order to obtain the mapping for one hostname, eight DNS messages were sent: four query messages and four reply messages! We’ll soon see how DNS caching reduces this query traffic.
+
+#### DNS caching
+The idea behind DNS caching is very simple. In a query chain, when a DNS server receives a DNS reply (containing, for example, a mapping from a hostname to an IP address), it can cache the mapping in its local memory. In the example above, the local DNS server `dns.nyu.edu` has acquired the IP addresses for 
+
+1. The TLD servers
+1. The authoritative DNS server for UMass
+1. `gaia.cs.umass.edu`
+
+Another host in NYU can thus use the cache in the local DNS server to directly get the IP address for `gai.cs.umass` or the TLD servers. In fact, because of caching, root servers are bypassed for all but a very small fraction of DNS queries.
+
 ### DNS Records and Messages
+
+
+<!--
+
 
 ## Peer-to-Peer Applications
 ### P2P File Distribution
