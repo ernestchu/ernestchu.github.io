@@ -792,11 +792,94 @@ Let's say, you have a startup named Network Utopia. You would like to build the 
     - Intercept queries from hosts and returns bogus replies
     - Difficult to implement
 
+## Peer-to-Peer File Distribution
+### Scalability of P2P architectures
+To compare client-server architectures with peer-to-peer architectures, and illustrate the inherent self-scalability of P2P, we now consider a simple quantitative model for distributing a file to a fixed set of peers for both architecture types.
+
+| Notation  | Meaning                                                 |
+|-----------|---------------------------------------------------------|
+| $u_s$     | Upload rate of the server's access link                 |
+| $u_i$     | Upload rate of the $i$th peer's access link             |
+| $d_i$     | Download rate of the $i$th peer's access link           |
+| $d_{min}$ | Download rate of the peer with the lowest download rate |
+| $F$       | Size of the file to be distributed (in bits)            |
+| $N$       | Number of peers                                         |
+| $D_{cs}$  | Distribution time for the client-server architecture    |
+| $D_{p2p}$ | Distribution time for the peer-to-peer architecture     |
+
+The **distribution time** is the time it takes to get a copy of the file to all $N$ peers
+
+**Client-server architectures**
+
+- The server must transmit one copy of the file to each of the $N$ peers. Thus the server must transmit $NF$ bits
+    - $D_{cs}$ must be at least $NF/u_s$
+- The peer with the lowest download rate cannot obtain all $F$ bits in less than $F/d_{min}$
+- Putting these two observations together, we obtain
+
+$$D_{cs} = \max \Bigg\{ {NF \over {u_s}} , {F \over {d_{min}}} \Bigg\}$$
+
+For $N$ large enough, $D_{cs}$ is given by $NF/u_s$. This the distribution time increases **linearly** with the number of peers $N$
+
+**Peer-to-peer architectures**
+
+In a system that not only server but also peers can contribute to the upload capacity
+
+- To get this file into the community of peers, the server must send the file at least once into its access link.
+    - $D_{p2p}$ is at least $F/u_s$
+- The peer with the lowest download rate cannot obtain all $F$ bits in less than $F/d_{min}$
+- The total upload capacity of the system $u_{total} = u_s + u_1 + \cdots + u_N$. And the system must deliver $F$ bits to each of the $N$ peers
+    - $D_{p2p}$ is at least $NF/u_{total}$
+- Putting them together, we get
+
+$$D_{p2p} = \max \Bigg\{ {F\over u_s}, {F\over d_{min}}, {NF \over {u_s + \sum_{i=1}^N u_i}} \Bigg\} $$
+
+Thus, applications with the P2P architecture can be self-scaling. This scalability is a direct consequence of peers being redistributors as well as consumers of bits.
+
+![figure-2-14](./assets/images/chapter-2/figure-2-14.jpeg)
+
+> Image credit to Computer Networking: A Top-down Approach, 7th Edition
+
+
+### BitTorrent
+BitTorrent is a popular P2P protocol for file distribution. In BitTorrent lingo, the collection of all peers participating in the distribution of a particular file is called a **torrent**. Peers in a torrent download equal-size chunks of the file from one another, with a typical chunk size of 256 kbytes. 
+
+When a peer first joins a torrent, it has no chunks. Over time it accumulates more and more chunks. While it downloads chunks it also uploads chunks to other peers. Once a peer has acquired the entire file, it may (selfishly, most of us) leave the torrent, or (altruistically) remain in the torrent and continue to upload chunks to other peers. Also, any peer may leave the torrent at any time with only a subset of chunks, and later rejoin the torrent.
+
+![figure-2-15](./assets/images/chapter-2/figure-2-15.jpeg)
+
+> Image credit to Computer Networking: A Top-down Approach, 7th Edition
+
+Each torrent has an infrastructure node called a **tracker**. A tracker is essentially a server keeping track of all peers but doesn't provide the upload capacity of any data chunk. When a peer joins a torrent, it registers itself to the tracker and periodically informs the tracker that it is till in the torrent.
+
+For example, when a new peer, Alice, joins the torrent
+
+1. The tracker randomly select a subset of peers from the set of participating peers. Let's say, 50 peers in this example. 
+1. Alice attempts to established 50 concurrent TCP connections with these peers (neighboring peers).
+1. As time evolves, some of these peers may leave and other peers (outside the initial 50) may attempt to establish TCP connections with Alice. So a peer’s neighboring peers will fluctuate over time.
+
+In BitTorrent, each user has two important decisions to make
+
+1. Which chunks should I request first
+    - Rarest first
+1. Which of my neighbors should I send chunks to
+    - tit-for-tat
+
+#### Rarest first
+The idea is to determine, from among the chunks she does not have, the chunks that are the rarest among her neighbors (that is, the chunks that have the fewest repeated copies among her neighbors) and then request those rarest chunks first. 
+
+In this manner, the rarest chunks get more quickly redistributed, aiming to (roughly) **equalize** the numbers of copies of each chunk in the torrent.
+
+
+#### Tit-for-tat
+An incentive mechanism **tit-for-tat** is necessary to prevent the majority of the users from being **freeriders**, that is, users who only want to download the files but provides little upload capacity.
+
+For each of the neighbors, a peer continually measures the rate at which it receives bits and determines the **four peers** that are feeding her bits at the **highest rate**. It then **only** sends chunks to these 4 peers, which are said to be **unchoked** . Every 10 seconds, the peer recalculate the rates and possibly modifies the set of 4 peers.
+
+However, every 30 seconds, the peer also randomly picks one additional neighbor and sends it chunks. The randomly chosen peer is called **optimistically unchoked** and it has the chance to become one of the **unchoked** peer if it's rate is high enough.
+
+Consequently, if the two peers are satisfied with the trading, they will put each other in their top four list and continue trading with each other. It's somehow similar to [Homogamy](https://www.youtube.com/watch?v=llKW1sGAADE) in Sociology. If you don't offer some chunks, then no one would like to give you either.
+
 <!--
-
-
-## Peer-to-Peer Applications
-### P2P File Distribution
 
 ## Video Streaming and Content Distribution Networks
 ### Internet Video
