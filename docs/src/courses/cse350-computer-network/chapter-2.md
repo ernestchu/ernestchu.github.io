@@ -691,7 +691,106 @@ The idea behind DNS caching is very simple. In a query chain, when a DNS server 
 Another host in NYU can thus use the cache in the local DNS server to directly get the IP address for `gai.cs.umass` or the TLD servers. In fact, because of caching, root servers are bypassed for all but a very small fraction of DNS queries.
 
 ### DNS Records and Messages
+The DNS servers that together implement the DNS distributed database store **resource records (RRs)**, including RRs that provide hostname-to-IP address mappings. A RR is a four-tuple taht contains the following fields
+```
+(Name, Value, Type, TTL)
+```
+`TTL` is the time to live of the resource record; it determines when a resource should be removed from a **cache**. In the example records given below, we ignore the `TTL` field.
 
+- `Type=A`
+    - Address
+    - The `Name` is a hostname
+    - The `Value` is the IP address for the hostname
+    - For example, `(www.nsysu.edu.tw, 140.117.13.241, A)`
+- `Type=NS`
+    - Name server
+    - The `Name` is a domain
+    - The `Value` is the hostname of an authoritative DNS server that knows how to obtain the IP addresses for hosts in the domain
+    - For example, `(nsysu.edu.tw, dns.nsysu.edu.tw, NS)`
+- `Type=CNAME`
+    - Canonical name
+    - The `Name` is an alias hostname
+    - The `Value` is a canonical hostname for the alias hostname `Name`
+    - For example, `(www.apple.com, www.apple.com.edgekey.net, CNAME)`
+- `Type=MX`
+    - Mail exchange
+    - The `Name` is an alias hostname
+    - The `Value` is a canonical hostname for the alias hostname `Name`
+    - For example, `(student.nsysu.edu.tw, spamgw.nsysu.edu.tw, MX)`
+
+::: tip Same Aliased Name for Mail and Web Server
+By using the `MX` record, a company can have the same aliased name for its mail server and for one of its other servers (such as its Web server).
+
+- To obtain the canonical name for the other server, the DNS client would query for an `CNAME` record.
+- To obtain the canonical name for the mail server, a DNS client would query for an `MX` record
+:::
+
+- If a DNS server is authoritative for a particular hostname, then the DNS server will contain a **Type `A` record** for the hostname. (Even if the DNS server is not authoritative, it may contain a Type A record in its cache.)
+- If a server is not authoritative for a hostname, it contains
+    - A **Type `NS` record** for the domain that includes the hostname
+    - A **Type `A` record** that provides the IP address of the DNS server in the Value field of the NS record.
+    - For example a TLD server may contain
+        - `(nsysu.edu.tw, dns.nsysu.edu.tw, NS)`
+        - `(dns.nsysu.edu.tw, 140.117.11.1, A)`
+
+#### DNS messages
+There are only two kinds of DNS messages, DNS **query** and **reply** messages. They share the same header as following
+
+![figure-2-13](./assets/images/chapter-2/figure-2-13.jpeg)
+
+> Image credit to Computer Networking: A Top-down Approach, 7th Edition
+
+- Flags
+    - A 1-bit query/reply flag
+        - Whether the message is a query (0) or a reply (1).
+    - A 1-bit authoritative flag
+        - Set in a reply message when a DNS server is an authoritative server for a queried name.
+    - A 1-bit recursion-desired flag
+    - A 1-bit recursion-available flag
+- Number of ...
+    - The number of occurrences of four types of data sections that follow the header
+- Questions
+    - Information about the query that is being made.
+    - A name field that contains the name that is being queried
+    - A type field that indicates the type of question being asked about the name, for example
+        - The host address associated with a name (Type `A`)
+        - The mail server for a name (Type `MX`)
+- Answers
+    - RRs for the name that was originally queried in a reply from a DNS server.
+    - A reply can return multiple RRs in the answer, since a hostname can have multiple IP addresses. Recall [load distribution](#services-provided-by-dns)
+- Authority
+    - RRs of **other** authoritative servers.
+- Additionally information
+    - Other helpful RRs, for example, the answer field in a reply to an `MX` query contains 
+        - A resource record providing the canonical hostname of a mail server. 
+        - **The additional section** contains a Type `A` record providing the IP address for the canonical hostname of the mail server
+
+#### Inserting records into DNS
+Let's say, you have a startup named Network Utopia. You would like to build the network infrastructure for your company. How to make others find you by a new domain name?
+
+1. Register the name `networkutopia.com` at **DNS registrar**, e.g., [Network Solutions](https://www.networksolutions.com)
+    - Provide hostnames, IP addresses of authoritative name server (primary and secondary)
+    - The registrar insert two RRs into `.com` TLD server
+        - `(networkutopia.com, dns.networkutopia.com, NS)`
+        - `(dns.networkutopia.com, 212.212.212.1, A)`
+1. In your authoritative, insert
+    - Type `A` record for `www.networkutopia.com` (Web server)
+    - Type `MX` record for `networkutopia.com` (Mail server)
+
+#### DNS vulnerabilities
+
+- DDoS bandwidth-flooding
+    - To DNS root servers
+        - Happened before on Oct. 21, 2002, where 13 DNS root server were attacked
+        - DNS root servers are typically protected by packet filers
+        - Most local DNS servers cache the IP addresses of TLD servers, allowing the query process to bypass the DNS root servers.
+    - To TLD servers
+        - Harder to filter DNS queries directed o DNS server
+        - Not easily bypassed as the root server
+        - Severity is mitigated by caching in local DNS servers
+- Man-in-the-middle-attack
+    - Intercept queries from hosts and returns bogus replies
+    - Difficult to implement
 
 <!--
 
